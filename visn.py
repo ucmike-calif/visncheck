@@ -2,27 +2,34 @@ import streamlit as st
 import google.generativeai as genai
 import os 
 
+# --- GOLD COLOR CONSTANT ---
+GOLD_COLOR = "#CC9900" 
+
 # --- CSS INJECTION FOR STYLING ---
 # This CSS handles color contrast, centers the title, and styles headers.
-st.markdown("""
+st.markdown(f"""
 <style>
 /* 1. Ensure text is readable against the dark background theme */
-div.stRadio > label > div > div {
+div.stRadio > label > div > div {{
     color: var(--text-color); 
-}
+}}
 
 /* 2. Style the main title using HTML for centering and color */
-h1 {
+h1 {{
     text-align: center;
-    color: #CC9900; /* Gold/Primary Color */
-}
+    color: {GOLD_COLOR}; /* Gold/Primary Color */
+}}
 
 /* 3. Style dimension headers */
-h2 {
-    color: #CC9900; /* Gold/Primary Color */
-}
+h2 {{
+    color: {GOLD_COLOR}; /* Gold/Primary Color */
+}}
 
-/* 4. Removed the complex, fragile CSS selector that targeted internal Streamlit 
+/* 4. Style sub-headers (h3) */
+h3 {{
+    color: {GOLD_COLOR}; /* Gold/Primary Color */
+}}
+/* 5. Removed the complex, fragile CSS selector that targeted internal Streamlit 
     dividers, which was likely causing the 'Error running app' on startup. */
 </style>
 """, unsafe_allow_html=True)
@@ -40,12 +47,15 @@ h2 {
 st.set_page_config(page_title="The Leader's Compass", page_icon="🧭")
 
 # --- APP TITLE & DESCRIPTION ---
-# UPDATED: Use inline style to ensure the gold color is applied directly to the title text
-st.markdown("<h1 style='text-align: center; color: #CC9900;'>Free **VISN** Check!</h1>", unsafe_allow_html=True)
+# Use custom HTML/Markdown for a centralized, branded title (already gold)
+st.markdown(f"<h1 style='text-align: center; color: {GOLD_COLOR};'>Free **VISN** Check!</h1>", unsafe_allow_html=True)
 st.markdown("## Want to live a life of Purpose, Joy, Impact and Well-being?")
-st.markdown("""
+
+# UPDATED: Changed introductory paragraph to make the dimension words gold using HTML span styling
+st.markdown(f"""
 This FREE 16-question survey will help you identify misalignments with your **V**alues, **I**nterests, **S**trengths and **N**eeds and determine next steps to a better life! 
-""")
+The four key dimensions assessed are <span style='color: {GOLD_COLOR};'>**Purpose**</span>, <span style='color: {GOLD_COLOR};'>**Joy**</span>, <span style='color: {GOLD_COLOR};'>**Impact**</span>, and <span style='color: {GOLD_COLOR};'>**Well-being**</span>.
+""", unsafe_allow_html=True)
 
 # --- API KEY SETUP ---
 # 1. First, try to get the API key from Streamlit Cloud Secrets (GEMINI_API_KEY)
@@ -70,22 +80,25 @@ RATING_OPTIONS = list(RATING_SCALE.keys())
 
 # --- THE QUESTIONS ---
 questions = [
-
+    # Purpose
     {"dimension": "Purpose", "text": "I spend my time contributing to something which gives me a sense of meaning and purpose."},
     {"dimension": "Purpose", "text": "My daily activities align with my deeper values and aspirations."},
     {"dimension": "Purpose", "text": "I wake up most days with a sense of motivation and intentionality."},
     {"dimension": "Purpose", "text": "I feel connected to something larger than myself."},
 
+    # Joy
     {"dimension": "Joy", "text": "There are many things in my life that I look forward to doing in the coming days/weeks."},
     {"dimension": "Joy", "text": "Most of the activities I spend my time on energize me."},
     {"dimension": "Joy", "text": "I make time for activities and relationships that bring me pleasure."},
     {"dimension": "Joy", "text": "I am able to experience and express genuine happiness and delight."},
     
+    # Impact
     {"dimension": "Impact", "text": "The activities I spend my time on create meaningful value for others."},
     {"dimension": "Impact", "text": "My contributions are recognized and appreciated by those around me."},
     {"dimension": "Impact", "text": "I see tangible results from the effort I invest."},
     {"dimension": "Impact", "text": "I believe my actions contribute positively to my community and/or organization."},
     
+    # Well-being
     {"dimension": "Well-being", "text": "I do not have to worry about paying my rent, utility and grocery bills."},
     {"dimension": "Well-being", "text": "I regularly engage in high quality exercise, diet and sleep."},
     {"dimension": "Well-being", "text": "Most days are reasonably free of stress and anxiety."},
@@ -105,6 +118,7 @@ q_counter = 1
 
 # Only configure the API if the key exists
 if api_key:
+    # Use the appropriate configuration for the legacy structure
     genai.configure(api_key=api_key)
     
     with st.form("assessment_form"):
@@ -113,7 +127,8 @@ if api_key:
         st.write(f"**1:** Strongly Disagree, **2:** Disagree, **3:** Neutral, **4:** Agree, **5:** Strongly Agree")
 
         for dimension, q_list in dimension_questions.items():
-            # Dimension Headers will use the gold color due to H2 CSS styling
+            # Dimension Headers (H2) will use the gold color due to H2 CSS styling
+            # This is already gold from your previous CSS configuration: h2 { color: #CC9900; }
             st.markdown(f"## {dimension}")
             for text in q_list:
                 key = f"Q{q_counter} ({dimension}): {text}"

@@ -1,25 +1,64 @@
 import streamlit as st
 import google.generativeai as genai
+import os 
+
+# --- CSS INJECTION FOR STYLING ---
+# This CSS handles color contrast, centers the title, and styles headers.
+st.markdown("""
+<style>
+/* 1. Ensure text is readable against the dark background theme */
+div.stRadio > label > div > div {
+    color: var(--text-color); 
+}
+
+/* 2. Style the main title using HTML for centering and color */
+h1 {
+    text-align: center;
+    color: #CC9900; /* Gold/Primary Color */
+}
+
+/* 3. Style dimension headers */
+h2 {
+    color: #CC9900; /* Gold/Primary Color */
+}
+
+/* 4. Removed the complex, fragile CSS selector that targeted internal Streamlit 
+   dividers, which was likely causing the 'Error running app' on startup. */
+</style>
+""", unsafe_allow_html=True)
 
 # --- CONFIGURATION ---
+# REMINDER: For the colors defined in [theme] below to work, 
+# you MUST have a file named 'compass-app/.streamlit/config.toml' in your GitHub repo 
+# containing the color definitions:
+# [theme]
+# primaryColor = "#CC9900" 
+# backgroundColor = "#800000"
+# secondaryBackgroundColor = "#A00000" 
+# textColor = "#FFFFFF" 
+# font = "sans serif"
 st.set_page_config(page_title="The Leader's Compass", page_icon="🧭")
 
-# --- APP TITLE & DESCRIPTION (Based on Landing Page.pdf) ---
-st.title("🧭 The Leader's Compass")
-st.markdown("## Feeling a Little Lost?")
+# --- APP TITLE & DESCRIPTION ---
+# Use custom HTML/Markdown for a centralized, branded title
+st.markdown("<h1 style='text-align: center;'>Free VISN Check!</h1>", unsafe_allow_html=True)
+st.markdown("## Want to live a life of Purpose, Joy, Impact and Well-being?")
 st.markdown("""
-The Leader's Compass can help you find your way!
-Take this short quiz to assess how well you're functioning across **four fundamental dimensions**: 
-**Impact**, **Purpose & Meaning**, **Joy**, and **Well-being**.
+This FREE 16-question survey will help you identify misalignments with your **V**alues, **I**nterests, **S**trengths and **N**eeds and determine next steps to a better life! 
 """)
 
-# --- SIDEBAR: API KEY ---
-# API Key handling remains the same.
-with st.sidebar:
-    api_key = st.text_input("Enter Google Gemini API Key", type="password")
-    st.markdown("[Get a free Gemini API key here](https://aistudio.google.com/app/apikey)")
+# --- API KEY SETUP ---
+# 1. First, try to get the API key from Streamlit Cloud Secrets (GEMINI_API_KEY)
+api_key = os.getenv("GEMINI_API_KEY")
 
-# --- RATING SCALE (Based on survey.pdf) ---
+# 2. If the secret isn't set, then display the sidebar input (for local testing)
+if not api_key:
+    with st.sidebar:
+        st.warning("Running locally? Please enter your API Key below.")
+        api_key = st.text_input("Enter Google Gemini API Key", type="password")
+        st.markdown("[Get a free Gemini API key here](https://aistudio.google.com/app/apikey)")
+
+# --- RATING SCALE ---
 RATING_SCALE = {
     "1": "1:Strongly Disagree",
     "2": "2:Disagree",
@@ -29,27 +68,24 @@ RATING_SCALE = {
 }
 RATING_OPTIONS = list(RATING_SCALE.keys())
 
-# --- THE QUESTIONS (Now 16 questions, 4 per dimension) ---
+# --- THE QUESTIONS ---
 questions = [
-    # Impact (What kind of mark are you working to leave on this world?)
-    {"dimension": "Impact", "text": "The activities I spend my time on create meaningful value for others."},
-    {"dimension": "Impact", "text": "My contributions are recognized and appreciated by those around me."},
-    {"dimension": "Impact", "text": "I see tangible results from the effort I invest."},
-    {"dimension": "Impact", "text": "I believe my actions contribute positively to my community and/or organization."},
 
-    # Purpose & Meaning (Are you contributing to something that matters to you?)
-    {"dimension": "Purpose & Meaning", "text": "I spend my time contributing to something which gives me a sense of meaning and purpose."},
-    {"dimension": "Purpose & Meaning", "text": "My daily activities align with my deeper values and aspirations."},
-    {"dimension": "Purpose & Meaning", "text": "I wake up most days with a sense of motivation and intentionality."},
-    {"dimension": "Purpose & Meaning", "text": "I feel connected to something larger than myself."}, # The 4th question
+    {"dimension": "Purpose", "text": "I spend my time contributing to something which gives me a sense of meaning and purpose."},
+    {"dimension": "Purpose", "text": "My daily activities align with my deeper values and aspirations."},
+    {"dimension": "Purpose", "text": "I wake up most days with a sense of motivation and intentionality."},
+    {"dimension": "Purpose", "text": "I feel connected to something larger than myself."},
 
-    # Joy (A full life contains moments of enjoyment and delight.)
     {"dimension": "Joy", "text": "There are many things in my life that I look forward to doing in the coming days/weeks."},
     {"dimension": "Joy", "text": "Most of the activities I spend my time on energize me."},
     {"dimension": "Joy", "text": "I make time for activities and relationships that bring me pleasure."},
     {"dimension": "Joy", "text": "I am able to experience and express genuine happiness and delight."},
-
-    # Well-being (Your physical, social, emotional & financial health.)
+    
+    {"dimension": "Impact", "text": "The activities I spend my time on create meaningful value for others."},
+    {"dimension": "Impact", "text": "My contributions are recognized and appreciated by those around me."},
+    {"dimension": "Impact", "text": "I see tangible results from the effort I invest."},
+    {"dimension": "Impact", "text": "I believe my actions contribute positively to my community and/or organization."},
+    
     {"dimension": "Well-being", "text": "I do not have to worry about paying my rent, utility and grocery bills."},
     {"dimension": "Well-being", "text": "I regularly engage in high quality exercise, diet and sleep."},
     {"dimension": "Well-being", "text": "Most days are reasonably free of stress and anxiety."},
@@ -67,46 +103,54 @@ for q in questions:
 user_answers = {}
 q_counter = 1
 
+# Only configure the API if the key exists
 if api_key:
     genai.configure(api_key=api_key)
     
     with st.form("assessment_form"):
-        # Display Rating Scale clearly at the top (Matching survey.pdf)
+        # Display Rating Scale clearly at the top
         st.markdown("### Rating Scale")
         st.write(f"**1:** Strongly Disagree, **2:** Disagree, **3:** Neutral, **4:** Agree, **5:** Strongly Agree")
 
         for dimension, q_list in dimension_questions.items():
+            # Dimension Headers will use the gold color due to H2 CSS styling
             st.markdown(f"## {dimension}")
             for text in q_list:
-                # Store the answer based on the question text and dimension
                 key = f"Q{q_counter} ({dimension}): {text}"
-                
-                # Use a unique key for Streamlit's radio buttons
                 st_key = f"radio_{q_counter}"
                 
-                st.markdown(f"**{q_counter}.** {text}")
+                # Combine question number and text into the radio label for tight grouping
+                question_label = f"**{q_counter}.** {text}"
                 
-                # Using a hidden label for clean presentation
                 answer = st.radio(
-                    label=f"Choose a number from 1 to 5 for Q{q_counter}", 
+                    label=question_label,
                     options=RATING_OPTIONS,
                     key=st_key,
-                    index=2, # Default to 3: Neutral
-                    horizontal=True
+                    index=None, 
+                    horizontal=True,
                 )
                 user_answers[key] = answer
                 q_counter += 1
+                
+                # ADD SPACE/DIVIDER AFTER EACH QUESTION/ANSWER 
+                st.markdown("---")
         
-        st.markdown("---")
+        # The default st.form separator is outside the loop
         submitted = st.form_submit_button("Submit Assessment and Generate Report")
 
     # --- AI GENERATION ---
     if submitted:
+        
+        # --- VALIDATION CHECK FOR UNANSWERED QUESTIONS ---
+        if any(answer is None for answer in user_answers.values()):
+            st.error("🚨 Please answer all 16 questions before submitting the assessment.")
+            st.stop()
+        # --- END VALIDATION CHECK ---
+        
         with st.spinner("Analyzing your answers and generating your Personalized Insights..."):
             try:
                 # 1. Construct the Prompt for the LLM
                 
-                # Format answers clearly, including the text of the question
                 answers_text = "\n".join([f"- {key.split(': ')[0]}: '{key.split(': ')[1]}' scored {RATING_SCALE[value]} ({value}/5)" for key, value in user_answers.items()])
                 
                 prompt = f"""
@@ -126,28 +170,29 @@ if api_key:
                 """
                 
                 # 2. Call Gemini
-                # FIX APPLIED HERE: Changed 'gemini-1.5-flash' to 'gemini-2.5-flash'
                 model = genai.GenerativeModel('gemini-2.5-flash')
                 response = model.generate_content(prompt)
                 
-                # 3. Display Results (Matching the look of the results.pdf)
+                # 3. Display Results
                 st.markdown("---")
                 st.markdown("## What is Your Compass Telling You?")
                 st.write("Your thoughtful responses have revealed meaningful insights about your current alignment across the four dimensions of a fulfilling life. Below you'll find a personalized narrative to guide your next steps.")
                 
-                # The LLM generates the "Personalized Insights" text based on the prompt
                 st.write(response.text)
                 
-                # Add the call to action from the results page
+                # Add the call to action
                 st.markdown(
                     """
                     ### Take your learning and growth to the next level.
                     [Join an upcoming offering of our Course on the Leader's Compass!](https://plei.thinkific.com/courses/compass-coming-soon)
                     """
                 )
-                st.button("Retake the Assessment")
+                # Display a button to clear the assessment (or refresh the page)
+                if st.button("Retake the Assessment"):
+                    st.experimental_rerun()
                 
             except Exception as e:
-                st.error(f"An error occurred: {e}. This may be an API key issue or quota limit. Ensure your API key is valid.")
+                st.error(f"An error occurred during AI generation: {e}")
 else:
-    st.warning("👈 Please enter your API Key in the sidebar to start the assessment.")
+    # This warning is shown if the API key is not found
+    st.warning("⚠️ Please ensure your API Key is set as a **Secret** in Streamlit Cloud (named `GEMINI_API_KEY`) or entered in the sidebar to run the assessment.")

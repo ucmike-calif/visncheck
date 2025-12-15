@@ -273,7 +273,7 @@ Present the output using Markdown in a professional format, using H3 headers for
                     """
                     ### Ready to Choose Your Next Step?
                     
-                    The power lies in awareness and choice. Whether you decide to maintain your current path or explore a new Archetype, our resources are designed to equip you with the **V.I.S.N.** framework to support your intentional life design.
+                    The power lies in awareness and choice. Whether you decide to maintain your current path or explore a new Archetype, here are some resources designed to equip you with the **V.I.S.N.** framework to support your intentional life design.
                     
                     * **For Comprehensive Learning:** [Join an upcoming offering of our Course on the Leader's Compass!](https://plei.thinkific.com/courses/compass-coming-soon)
                     * **For Personalized Guidance:** [Explore 1-on-1 Coaching to accelerate your transformation.](https://www.ChangeYourFuture.net)

@@ -20,7 +20,7 @@ ARCHETYPES = """
     'L L H H': 'The Unburdened Influencer (Effective Operator)',
     'H H L L': 'The High-Achieving Seeker (Aspiring Burnout)',
     'H L H L': 'The Mission-Driven Martyr (Driven Architect)',
-    'L H H L': 'The Joyful Producer (Busy Hedonist)',
+    'L H L H': 'The Joyful Producer (Busy Hedonist)',
     'H L L L': 'The Burnt-Out Visionary (Idealist in Distress)',
     'L H L L': 'The Contented Drifter (Distracted Escapist)',
     'L L L H': 'The Healthy Underachiever (Resilient Placeholder)',
@@ -78,16 +78,18 @@ div.stRadio > label > div > div {{
 """, unsafe_allow_html=True)
 
 # --- CONFIGURATION ---
-st.set_page_config(page_title="The Leader's Compass", page_icon="🧭")
+st.set_page_config(page_title="The Self-Leader's Compass", page_icon="🧭")
 
 # --- APP TITLE & DESCRIPTION ---
 # Title is gold
 st.markdown(f"<h1 style='text-align: center; color: {GOLD_COLOR};'>Free **VISN** Check!</h1>", unsafe_allow_html=True)
-st.markdown("## Are You Living a life of Purpose, Joy, Impact and Well-being?")
+# **Crucial text change here:** Focus on self-leadership
+st.markdown("## Are You **Leading Yourself** to a life of Purpose, Joy, Impact and Well-being?")
 
 # V.I.S.N. words are gold
+# **Crucial text change here:** Emphasize choice and self-direction
 st.markdown(f"""
-This FREE 16-question survey will use the four points of The Leader's Compass <span style='color: {GOLD_COLOR};'>**V**alues</span>, <span style='color: {GOLD_COLOR};'>**I**nterests</span>, <span style='color: {GOLD_COLOR};'>**S**trengths</span> and <span style='color: {GOLD_COLOR};'>**N**eeds</span> to help you figure out where you are and decide where you want to go! 
+This FREE 16-question survey uses the four points of The Self-Leader's Compass—<span style='color: {GOLD_COLOR};'>**V**alues</span>, <span style='color: {GOLD_COLOR};'>**I**nterests</span>, <span style='color: {GOLD_COLOR};'>**S**trengths</span> and <span style='color: {GOLD_COLOR};'>**N**eeds</span>—to help you figure out where you are and decide where you want to go by taking ownership of your choices and future.
 """, unsafe_allow_html=True)
 
 # --- API KEY SETUP ---
@@ -216,7 +218,7 @@ if api_key:
                 answers_text = "\n".join([f"- {key.split(': ')[0]}: '{key.split(': ')[1]}' scored {RATING_SCALE[value]} ({value}/5)" for key, value in user_answers.items()])
                 
                 prompt = f"""
-Act as the expert consultant for "The Leader's Compass" assessment.
+Act as the expert coach and consultant for "The Leader's Compass" assessment. **Crucially, the concept of 'Leader' here refers to self-leadership, intentional living, and designing one's future, NOT corporate or professional leadership.**
 
 The user has completed the assessment using a 1-5 scale (1=Strongly Disagree, 5=Strongly Agree). The questions are categorized into four dimensions: Purpose (P), Joy (J), Impact (I), and Well-being (W).
 
@@ -229,13 +231,13 @@ Here are the Archetype definitions. Use a threshold of 3.5 to determine if a dim
 ARCHETYPES:
 {ARCHETYPES}
 
-Your Task is to generate the "Personalized Insights" report with the following, client-centered structure:
+Your Task is to generate the "Personalized Insights" report with the following, client-centered structure, focusing on **choice, agency, and avoiding the default future**:
 
 1. **Determine the Archetype:** Calculate the average score for each dimension (P, J, I, W) and determine the H/L code to identify the user's Archetype name.
-2. **Narrative Profile:** Write a 'Narrative Profile' (approx 150 words) that confirms the identified Archetype name. The goal is validation: speak empathetically to the user's current strengths and challenges. Do NOT frame this state as inherently good or bad, but as their current position.
+2. **Narrative Profile:** Write a 'Narrative Profile' (approx 150 words) that confirms the identified Archetype name. The goal is validation: speak empathetically to the user's current strengths and challenges. Do NOT frame this state as inherently good or bad, but as their current, factual position (their 'default' if no choice is made).
 3. **The Path to Choice:** This section replaces the old recommendations. Write a section (approx 100 words) that guides the user toward conscious choice:
-    * **If the overall alignment is high (3 or 4 H's):** Invite them to make a *conscious choice* to be in this high-performing state for now (to avoid cognitive dissonance). Suggest they re-check their position later and confirm it's still working.
-    * **If the misalignment is clear (2 or more L's):** Validate that the friction they feel is real. Invite them to explore new choices that could lead to a different, more sustainable Archetype that aligns better with their future self. The focus is on **empowered agency** and **choice**.
+    * **If the overall alignment is high (3 or 4 H's):** Validate that the current state is likely *working for them*. Invite them to make a *conscious choice* to embrace this state for now (to avoid cognitive dissonance), and encourage them to schedule a future re-check to ensure it remains their intentional choice.
+    * **If the misalignment is clear (2 or more L's):** Validate that the friction, exhaustion, or disconnect they feel is real and is the result of past default choices. Invite them to explore new, intentional choices that could lead them to a different, more sustainable Archetype that aligns better with the life they choose to design. The focus is on **empowered agency** and **intentional self-leadership**.
     
 Present the output using Markdown in a professional format, using H3 headers for sections. Ensure the final output includes the Archetype name prominently.
 """
@@ -247,7 +249,7 @@ Present the output using Markdown in a professional format, using H3 headers for
                 # 3. Display Results
                 st.markdown("---")
                 st.markdown("## What is Your Compass Telling You?")
-                st.write("Your thoughtful responses have provided a snapshot of your current alignment. The following insights are designed to help you make conscious choices about your future direction.")
+                st.write("Your thoughtful responses have provided a snapshot of your current self-leadership. The following insights are designed to help you make conscious choices about the future you are designing.")
                 
                 st.write(response.text)
                 

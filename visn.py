@@ -20,7 +20,7 @@ ARCHETYPES = """
     'L L H H': 'The Unburdened Influencer (Effective Operator)',
     'H H L L': 'The High-Achieving Seeker (Aspiring Burnout)',
     'H L H L': 'The Mission-Driven Martyr (Driven Architect)',
-    'L H L H': 'The Joyful Producer (Busy Hedonist)',
+    'L H H L': 'The Joyful Producer (Busy Hedonist)',
     'H L L L': 'The Burnt-Out Visionary (Idealist in Distress)',
     'L H L L': 'The Contented Drifter (Distracted Escapist)',
     'L L L H': 'The Healthy Underachiever (Resilient Placeholder)',
@@ -78,18 +78,19 @@ div.stRadio > label > div > div {{
 """, unsafe_allow_html=True)
 
 # --- CONFIGURATION ---
-st.set_page_config(page_title="The Self-Leader's Compass", page_icon="🧭")
+# Updated to "The Leader's Compass"
+st.set_page_config(page_title="The Leader's Compass", page_icon="🧭")
 
 # --- APP TITLE & DESCRIPTION ---
 # Title is gold
 st.markdown(f"<h1 style='text-align: center; color: {GOLD_COLOR};'>Free **VISN** Check!</h1>", unsafe_allow_html=True)
-# **Crucial text change here:** Focus on self-leadership
-st.markdown("## Are You **Leading Yourself** to a life of Purpose, Joy, Impact and Well-being?")
+# Updated to focus on the verb "leading"
+st.markdown("## Are You **Intentionally Leading** Yourself to a life of Purpose, Joy, Impact and Well-being?")
 
 # V.I.S.N. words are gold
-# **Crucial text change here:** Emphasize choice and self-direction
+# Updated to "The Leader's Compass"
 st.markdown(f"""
-This FREE 16-question survey uses the four points of The Self-Leader's Compass—<span style='color: {GOLD_COLOR};'>**V**alues</span>, <span style='color: {GOLD_COLOR};'>**I**nterests</span>, <span style='color: {GOLD_COLOR};'>**S**trengths</span> and <span style='color: {GOLD_COLOR};'>**N**eeds</span>—to help you figure out where you are and decide where you want to go by taking ownership of your choices and future.
+This FREE 16-question survey uses the four points of The Leader's Compass—<span style='color: {GOLD_COLOR};'>**V**alues</span>, <span style='color: {GOLD_COLOR};'>**I**nterests</span>, <span style='color: {GOLD_COLOR};'>**S**trengths</span> and <span style='color: {GOLD_COLOR};'>**N**eeds</span>—to help you figure out where you are and decide where you want to go by taking ownership of your choices and future.
 """, unsafe_allow_html=True)
 
 # --- API KEY SETUP ---
@@ -218,7 +219,7 @@ if api_key:
                 answers_text = "\n".join([f"- {key.split(': ')[0]}: '{key.split(': ')[1]}' scored {RATING_SCALE[value]} ({value}/5)" for key, value in user_answers.items()])
                 
                 prompt = f"""
-Act as the expert coach and consultant for "The Leader's Compass" assessment. **Crucially, the concept of 'Leader' here refers to self-leadership, intentional living, and designing one's future, NOT corporate or professional leadership.**
+Act as the expert coach and consultant for "The Leader's Compass" assessment. **Crucially, the concept of 'Leader' here refers to how the user is intentionally leading their life and designing their future, NOT corporate or professional leadership.**
 
 The user has completed the assessment using a 1-5 scale (1=Strongly Disagree, 5=Strongly Agree). The questions are categorized into four dimensions: Purpose (P), Joy (J), Impact (I), and Well-being (W).
 
@@ -254,7 +255,7 @@ Present the output using Markdown in a professional format, using H3 headers for
                 # 3. Display Results
                 st.markdown("---")
                 st.markdown("## What is Your Compass Telling You?")
-                st.write("Your thoughtful responses have provided a snapshot of your current self-leadership. The following insights are designed to help you make conscious choices about the future you are designing.")
+                st.write("Your thoughtful responses have provided a snapshot of how you are currently leading your life. The following insights are designed to help you make conscious choices about the future you are designing.")
                 
                 st.write(response.text)
                 

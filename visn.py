@@ -67,6 +67,12 @@ div.stRadio > label > div > div {{
     color: var(--text-color); 
     font-size: 18px; 
 }}
+
+/* FIX for Anchor Links: Explicitly hide the hyperlink icons next to headers */
+.stApp a.anchor-link {{
+    display: none !important;
+}}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -75,7 +81,7 @@ st.set_page_config(page_title="The Leader's Compass", page_icon="🧭")
 
 # --- APP TITLE & DESCRIPTION ---
 # Title is gold
-st.markdown(f"<h1 style='text-align: center; color: {GOLD_COLOR};'>Free VISN Check!</h1>", unsafe_allow_html=True)
+st.markdown(f"<h1 style='text-align: center; color: {GOLD_COLOR};'>Free **VISN** Check!</h1>", unsafe_allow_html=True)
 st.markdown("## Are You Living a life of Purpose, Joy, Impact and Well-being?")
 
 # V.I.S.N. words are gold
@@ -249,18 +255,4 @@ if api_key:
                     """
                     ### Ready to Choose Your Next Step?
                     
-                    The power lies in awareness and choice. Whether you decide to maintain your current path or explore a new Archetype, our resources are designed to equip you with the **V.I.S.N.** framework to support your intentional life design.
-                    
-                    * **For Comprehensive Learning:** [Join an upcoming offering of our Course on the Leader's Compass!](https://plei.thinkific.com/courses/compass-coming-soon)
-                    * **For Personalized Guidance:** [Explore 1-on-1 Coaching to accelerate your transformation.](YOUR_COACHING_LINK_HERE)
-                    """
-                )
-                # Display a button to clear the assessment (or refresh the page)
-                if st.button("Retake the Assessment"):
-                    st.experimental_rerun()
-                
-            except Exception as e:
-                st.error(f"An error occurred during AI generation: {e}")
-else:
-    # This warning is shown if the API key is not found
-    st.warning("⚠️ Please ensure your API Key is set as a **Secret** in Streamlit Cloud (named `GEMINI_API_KEY`) or entered in the sidebar to run the assessment.")
+                    The power lies in awareness and choice. Whether you decide to maintain your current path or explore a new Archetype, our resources are designed to equip you with the **V.I.S.N.** framework to support your intentional life

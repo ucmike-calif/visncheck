@@ -75,7 +75,7 @@ st.set_page_config(page_title="The Leader's Compass", page_icon="🧭")
 
 # --- APP TITLE & DESCRIPTION ---
 # Title is gold
-st.markdown(f"<h1 style='text-align: center; color: {GOLD_COLOR};'>Free **VISN** Check!</h1>", unsafe_allow_html=True)
+st.markdown(f"<h1 style='text-align: center; color: {GOLD_COLOR};'>Free VISN Check!</h1>", unsafe_allow_html=True)
 st.markdown("## Want to live a life of Purpose, Joy, Impact and Well-being?")
 
 # V.I.S.N. words are gold

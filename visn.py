@@ -7,24 +7,25 @@ GOLD_COLOR = "#CC9900"
 
 # --- ARCHETYPE DEFINITIONS FOR AI REFERENCE ---
 # P=Purpose, J=Joy, I=Impact, W=Well-being. H=High, L=Low. Threshold for H is 3.5.
+# REDEFINED using single quotes for robust insertion into the main prompt's f-string
 ARCHETYPES = """
 {
-    "H H H H": "The Harmonious Leader",
-    "H H H L": "The Contributing Catalyst (High-Performance Drain)",
-    "H H L H": "The Soulful Activist (Meaningful Observer)",
-    "H L H H": "The Joyful Creator (Mission-Driven Striker)",
-    "L H H H": "The Focused Professional (Contented Achiever)",
-    "H L L H": "The Self-Sustaining Mystic (Quiet Contemplative)",
-    "L H L H": "The Well-Meaning Optimist (Happy Cruiser)",
-    "L L H H": "The Unburdened Influencer (Effective Operator)",
-    "H H L L": "The High-Achieving Seeker (Aspiring Burnout)",
-    "H L H L": "The Mission-Driven Martyr (Driven Architect)",
-    "L H H L": "The Joyful Producer (Busy Hedonist)",
-    "H L L L": "The Burnt-Out Visionary (Idealist in Distress)",
-    "L H L L": "The Contented Drifter (Distracted Escapist)",
-    "L L L H": "The Healthy Underachiever (Resilient Placeholder)",
-    "L L H L": "The Disillusioned Performer (Transactional Hustler)",
-    "L L L L": "The Fully Disconnected (Seeking Explorer)"
+    'H H H H': 'The Harmonious Leader',
+    'H H H L': 'The Contributing Catalyst (High-Performance Drain)',
+    'H H L H': 'The Soulful Activist (Meaningful Observer)',
+    'H L H H': 'The Joyful Creator (Mission-Driven Striker)',
+    'L H H H': 'The Focused Professional (Contented Achiever)',
+    'H L L H': 'The Self-Sustaining Mystic (Quiet Contemplative)',
+    'L H L H': 'The Well-Meaning Optimist (Happy Cruiser)',
+    'L L H H': 'The Unburdened Influencer (Effective Operator)',
+    'H H L L': 'The High-Achieving Seeker (Aspiring Burnout)',
+    'H L H L': 'The Mission-Driven Martyr (Driven Architect)',
+    'L H H L': 'The Joyful Producer (Busy Hedonist)',
+    'H L L L': 'The Burnt-Out Visionary (Idealist in Distress)',
+    'L H L L': 'The Contented Drifter (Distracted Escapist)',
+    'L L L H': 'The Healthy Underachiever (Resilient Placeholder)',
+    'L L H L': 'The Disillusioned Performer (Transactional Hustler)',
+    'L L L L': 'The Fully Disconnected (Seeking Explorer)'
 }
 """
 
@@ -215,29 +216,29 @@ if api_key:
                 answers_text = "\n".join([f"- {key.split(': ')[0]}: '{key.split(': ')[1]}' scored {RATING_SCALE[value]} ({value}/5)" for key, value in user_answers.items()])
                 
                 prompt = f"""
-                Act as the expert consultant for "The Leader's Compass" assessment.
-                
-                The user has completed the assessment using a 1-5 scale (1=Strongly Disagree, 5=Strongly Agree). The questions are categorized into four dimensions: Purpose (P), Joy (J), Impact (I), and Well-being (W).
-                
-                Here are the user's answers:
-                
-                {answers_text}
-                
-                Here are the Archetype definitions. Use a threshold of 3.5 to determine if a dimension score is High (H) or Low (L). The average score across the four questions in each dimension determines the H/L code.
-                
-                ARCHETYPES:
-                {ARCHETYPES}
-                
-                Your Task is to generate the "Personalized Insights" report with the following, client-centered structure:
-                
-                1. **Determine the Archetype:** Calculate the average score for each dimension (P, J, I, W) and determine the H/L code to identify the user's Archetype name.
-                2. **Narrative Profile:** Write a 'Narrative Profile' (approx 150 words) that confirms the identified Archetype name. The goal is validation: speak empathetically to the user's current strengths and challenges. Do NOT frame this state as inherently good or bad, but as their current position.
-                3. **The Path to Choice:** This section replaces the old recommendations. Write a section (approx 100 words) that guides the user toward conscious choice:
-                    * **If the overall alignment is high (3 or 4 H's):** Invite them to make a *conscious choice* to be in this high-performing state for now (to avoid cognitive dissonance). Suggest they re-check their position later and confirm it's still working.
-                    * **If the misalignment is clear (2 or more L's):** Validate that the friction they feel is real. Invite them to explore new choices that could lead to a different, more sustainable Archetype that aligns better with their future self. The focus is on **empowered agency** and **choice**.
-                    
-                Present the output using Markdown in a professional format, using H3 headers for sections. Ensure the final output includes the Archetype name prominently.
-                """
+Act as the expert consultant for "The Leader's Compass" assessment.
+
+The user has completed the assessment using a 1-5 scale (1=Strongly Disagree, 5=Strongly Agree). The questions are categorized into four dimensions: Purpose (P), Joy (J), Impact (I), and Well-being (W).
+
+Here are the user's answers:
+
+{answers_text}
+
+Here are the Archetype definitions. Use a threshold of 3.5 to determine if a dimension score is High (H) or Low (L). The average score across the four questions in each dimension determines the H/L code.
+
+ARCHETYPES:
+{ARCHETYPES}
+
+Your Task is to generate the "Personalized Insights" report with the following, client-centered structure:
+
+1. **Determine the Archetype:** Calculate the average score for each dimension (P, J, I, W) and determine the H/L code to identify the user's Archetype name.
+2. **Narrative Profile:** Write a 'Narrative Profile' (approx 150 words) that confirms the identified Archetype name. The goal is validation: speak empathetically to the user's current strengths and challenges. Do NOT frame this state as inherently good or bad, but as their current position.
+3. **The Path to Choice:** This section replaces the old recommendations. Write a section (approx 100 words) that guides the user toward conscious choice:
+    * **If the overall alignment is high (3 or 4 H's):** Invite them to make a *conscious choice* to be in this high-performing state for now (to avoid cognitive dissonance). Suggest they re-check their position later and confirm it's still working.
+    * **If the misalignment is clear (2 or more L's):** Validate that the friction they feel is real. Invite them to explore new choices that could lead to a different, more sustainable Archetype that aligns better with their future self. The focus is on **empowered agency** and **choice**.
+    
+Present the output using Markdown in a professional format, using H3 headers for sections. Ensure the final output includes the Archetype name prominently.
+"""
                 
                 # 2. Call Gemini
                 model = genai.GenerativeModel('gemini-2.5-flash')
@@ -255,4 +256,18 @@ if api_key:
                     """
                     ### Ready to Choose Your Next Step?
                     
-                    The power lies in awareness and choice. Whether you decide to maintain your current path or explore a new Archetype, our resources are designed to equip you with the **V.I.S.N.** framework to support your intentional life
+                    The power lies in awareness and choice. Whether you decide to maintain your current path or explore a new Archetype, our resources are designed to equip you with the **V.I.S.N.** framework to support your intentional life design.
+                    
+                    * **For Comprehensive Learning:** [Join an upcoming offering of our Course on the Leader's Compass!](https://plei.thinkific.com/courses/compass-coming-soon)
+                    * **For Personalized Guidance:** [Explore 1-on-1 Coaching to accelerate your transformation.](YOUR_COACHING_LINK_HERE)
+                    """
+                )
+                # Display a button to clear the assessment (or refresh the page)
+                if st.button("Retake the Assessment"):
+                    st.experimental_rerun()
+                
+            except Exception as e:
+                st.error(f"An error occurred during AI generation: {e}")
+else:
+    # This warning is shown if the API key is not found
+    st.warning("⚠️ Please ensure your API Key is set as a **Secret** in Streamlit Cloud (named `GEMINI_API_KEY`) or entered in the sidebar to run the assessment.")

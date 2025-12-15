@@ -20,7 +20,7 @@ ARCHETYPES = """
     'L L H H': 'The Unburdened Influencer (Effective Operator)',
     'H H L L': 'The High-Achieving Seeker (Aspiring Burnout)',
     'H L H L': 'The Mission-Driven Martyr (Driven Architect)',
-    'L H L H': 'The Joyful Producer (Busy Hedonist)',
+    'L H H L': 'The Joyful Producer (Busy Hedonist)',
     'H L L L': 'The Burnt-Out Visionary (Idealist in Distress)',
     'L H L L': 'The Contented Drifter (Distracted Escapist)',
     'L L L H': 'The Healthy Underachiever (Resilient Placeholder)',
@@ -231,13 +231,13 @@ Here are the Archetype definitions. Use a threshold of 3.5 to determine if a dim
 ARCHETYPES:
 {ARCHETYPES}
 
-Your Task is to generate the "Personalized Insights" report with the following, client-centered structure, focusing on **choice, agency, and avoiding the default future**:
+Your Task is to generate the "Personalized Insights" report with the following, concise, client-centered structure:
 
 1. **Determine the Archetype:** Calculate the average score for each dimension (P, J, I, W) and determine the H/L code to identify the user's Archetype name.
-2. **Narrative Profile:** Write a 'Narrative Profile' (approx 150 words) that confirms the identified Archetype name. The goal is validation: speak empathetically to the user's current strengths and challenges. Do NOT frame this state as inherently good or bad, but as their current, factual position (their 'default' if no choice is made).
-3. **The Path to Choice:** This section replaces the old recommendations. Write a section (approx 100 words) that guides the user toward conscious choice:
-    * **If the overall alignment is high (3 or 4 H's):** Validate that the current state is likely *working for them*. Invite them to make a *conscious choice* to embrace this state for now (to avoid cognitive dissonance), and encourage them to schedule a future re-check to ensure it remains their intentional choice.
-    * **If the misalignment is clear (2 or more L's):** Validate that the friction, exhaustion, or disconnect they feel is real and is the result of past default choices. Invite them to explore new, intentional choices that could lead them to a different, more sustainable Archetype that aligns better with the life they choose to design. The focus is on **empowered agency** and **intentional self-leadership**.
+2. **Narrative Profile:** Write a 'Narrative Profile' (**max 75 words**) that confirms the identified Archetype name, speaks empathetically to their current strengths and challenges (the H's and L's), and clearly defines their current position.
+3. **The Path to Choice:** Write a section (**max 50 words**) that guides the user toward conscious choice:
+    * **If the overall alignment is high (3 or 4 H's):** Validate that the current state is likely working. Invite them to make a *conscious, intentional choice* to embrace this path for now, and encourage a future re-assessment.
+    * **If the misalignment is clear (2 or more L's):** Validate the friction they feel. Invite them to explore new, intentional choices that could lead to a different, more sustainable Archetype. Focus on **empowered agency** and **intentional self-leadership**.
     
 Present the output using Markdown in a professional format, using H3 headers for sections. Ensure the final output includes the Archetype name prominently.
 """
@@ -261,7 +261,7 @@ Present the output using Markdown in a professional format, using H3 headers for
                     The power lies in awareness and choice. Whether you decide to maintain your current path or explore a new Archetype, our resources are designed to equip you with the **V.I.S.N.** framework to support your intentional life design.
                     
                     * **For Comprehensive Learning:** [Join an upcoming offering of our Course on the Leader's Compass!](https://plei.thinkific.com/courses/compass-coming-soon)
-                    * **For Personalized Guidance:** [Explore 1-on-1 Coaching to accelerate your transformation.](YOUR_COACHING_LINK_HERE)
+                    * **For Personalized Guidance:** [Explore 1-on-1 Coaching to accelerate your transformation.](https://www.ChangeYourFuture.net)
                     """
                 )
                 # Display a button to clear the assessment (or refresh the page)

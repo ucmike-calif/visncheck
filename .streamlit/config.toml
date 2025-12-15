@@ -1,6 +1,12 @@
+# .streamlit/config.toml
+
 [theme]
-primaryColor = "#CC9900" 
+primaryColor = "#CC9900"
 backgroundColor = "#800000"
-secondaryBackgroundColor = "#A00000" 
-textColor = "#FFFFFF" 
+secondaryBackgroundColor = "#A00000"
+textColor = "#FFFFFF"
 font = "sans serif"
+
+[browser]
+# This setting explicitly hides the small hyperlink icons next to headers.
+showAnchor = false

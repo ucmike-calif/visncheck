@@ -80,7 +80,7 @@ st.markdown("## Want to live a life of Purpose, Joy, Impact and Well-being?")
 
 # V.I.S.N. words are gold
 st.markdown(f"""
-This FREE 16-question survey will help you identify misalignments with your <span style='color: {GOLD_COLOR};'>**V**alues</span>, <span style='color: {GOLD_COLOR};'>**I**nterests</span>, <span style='color: {GOLD_COLOR};'>**S**trengths</span> and <span style='color: {GOLD_COLOR};'>**N**eeds</span> and determine next steps to a better life! 
+This FREE 16-question survey will help you identify misalignments with the four points of The Leader's Compass: <span style='color: {GOLD_COLOR};'>**V**alues</span>, <span style='color: {GOLD_COLOR};'>**I**nterests</span>, <span style='color: {GOLD_COLOR};'>**S**trengths</span> and <span style='color: {GOLD_COLOR};'>**N**eeds</span> and determine next steps to a better life! 
 """, unsafe_allow_html=True)
 
 # --- API KEY SETUP ---

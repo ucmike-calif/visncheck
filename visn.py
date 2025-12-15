@@ -75,12 +75,12 @@ st.set_page_config(page_title="The Leader's Compass", page_icon="🧭")
 
 # --- APP TITLE & DESCRIPTION ---
 # Title is gold
-st.markdown(f"<h1 style='text-align: center; color: {GOLD_COLOR};'>Free VISN Check!</h1>", unsafe_allow_html=True)
+st.markdown(f"<h1 style='text-align: center; color: {GOLD_COLOR};'>Free **VISN** Check!</h1>", unsafe_allow_html=True)
 st.markdown("## Want to live a life of Purpose, Joy, Impact and Well-being?")
 
 # V.I.S.N. words are gold
 st.markdown(f"""
-This FREE 16-question survey will help you identify misalignments with the four points of The Leader's Compass: <span style='color: {GOLD_COLOR};'>**V**alues</span>, <span style='color: {GOLD_COLOR};'>**I**nterests</span>, <span style='color: {GOLD_COLOR};'>**S**trengths</span> and <span style='color: {GOLD_COLOR};'>**N**eeds</span> and determine next steps to a better life! 
+This FREE 16-question survey will help you identify misalignments with your <span style='color: {GOLD_COLOR};'>**V**alues</span>, <span style='color: {GOLD_COLOR};'>**I**nterests</span>, <span style='color: {GOLD_COLOR};'>**S**trengths</span> and <span style='color: {GOLD_COLOR};'>**N**eeds</span> and determine next steps to a better life! 
 """, unsafe_allow_html=True)
 
 # --- API KEY SETUP ---
@@ -137,7 +137,6 @@ questions = [
 dimension_questions = {}
 for q in questions:
     # Use the dimension name without the parenthetical for the dict key 
-    # but the full text for grouping the questions
     key = q['dimension'].split(' ')[0] # e.g., "Purpose"
     if key not in dimension_questions:
         dimension_questions[key] = []
@@ -173,14 +172,11 @@ if api_key:
             
             for text in q_list:
                 # The question text already contains the full dimension name from the 'questions' list
-                key = f"Q{q_counter} ({text.split(' ')[0]}): {text}" # e.g. Q1 (Purpose): I spend my time...
+                key = f"Q{q_counter} ({dimension_key}): {text}" # e.g. Q1 (Purpose): I spend my time...
                 st_key = f"radio_{q_counter}"
                 
-                # We use the text *after* the dimension name in the 'questions' list for the radio label
-                question_label = f"**{q_counter}.** {text.split(') ')[-1]}" if ')' in text else f"**{q_counter}.** {text}" 
-                
                 answer = st.radio(
-                    label=f"**{q_counter}.** {text}", # Display the full question text here
+                    label=f"**{q_counter}.** {text.split(') ')[-1]}", # Display the question text without the parenthetical
                     options=RATING_OPTIONS,
                     key=st_key,
                     index=None, 
@@ -188,8 +184,7 @@ if api_key:
                 )
                 
                 # Store the answer using the short dimension name for the AI prompt to be simple
-                short_dimension = dimension_key
-                user_answers[f"Q{q_counter} ({short_dimension}): {text}"] = answer
+                user_answers[f"Q{q_counter} ({dimension_key}): {text.split(') ')[-1]}"] = answer
                 q_counter += 1
                 
                 # ADD SPACE/DIVIDER AFTER EACH QUESTION/ANSWER 
@@ -222,17 +217,19 @@ if api_key:
                 
                 {answers_text}
                 
-                Here are the Archetype definitions. Use a threshold of 3.5 to determine if a dimension score is High (H) or Low (L). The average score across the four questions in each dimension determines the H/L code (e.g., P score 4.0, J score 2.5, I score 3.8, W score 2.0 = H L H L).
+                Here are the Archetype definitions. Use a threshold of 3.5 to determine if a dimension score is High (H) or Low (L). The average score across the four questions in each dimension determines the H/L code.
                 
                 ARCHETYPES:
                 {ARCHETYPES}
                 
-                Your Task is to generate the "Personalized Insights" report with the following structure:
+                Your Task is to generate the "Personalized Insights" report with the following, client-centered structure:
                 
                 1. **Determine the Archetype:** Calculate the average score for each dimension (P, J, I, W) and determine the H/L code to identify the user's Archetype name.
-                2. **Narrative Profile:** Write a 'Narrative Profile' (approx 150 words) that confirms the identified Archetype name, validates the user's struggles and strengths based on the dimensions, and speaks empathetically to their current situation.
-                3. **The Path to Symmetry:** Replace the old recommendations section with a new section titled "The Path to Symmetry." In this section (approx 100 words), describe the *promise* of what full alignment (The Harmonious Leader - H H H H) feels like—a life of effortless flow, sustained energy, and profound fulfillment. Do NOT give specific steps, but rather explain the benefit of learning the tools to bridge the gap and achieve this state.
-                
+                2. **Narrative Profile:** Write a 'Narrative Profile' (approx 150 words) that confirms the identified Archetype name. The goal is validation: speak empathetically to the user's current strengths and challenges. Do NOT frame this state as inherently good or bad, but as their current position.
+                3. **The Path to Choice:** This section replaces the old recommendations. Write a section (approx 100 words) that guides the user toward conscious choice:
+                    * **If the overall alignment is high (3 or 4 H's):** Invite them to make a *conscious choice* to be in this high-performing state for now (to avoid cognitive dissonance). Suggest they re-check their position later and confirm it's still working.
+                    * **If the misalignment is clear (2 or more L's):** Validate that the friction they feel is real. Invite them to explore new choices that could lead to a different, more sustainable Archetype that aligns better with their future self. The focus is on **empowered agency** and **choice**.
+                    
                 Present the output using Markdown in a professional format, using H3 headers for sections. Ensure the final output includes the Archetype name prominently.
                 """
                 
@@ -243,16 +240,16 @@ if api_key:
                 # 3. Display Results
                 st.markdown("---")
                 st.markdown("## What is Your Compass Telling You?")
-                st.write("Your thoughtful responses have revealed meaningful insights about your current alignment across the four dimensions of a fulfilling life. Below you'll find a personalized narrative to guide your next steps.")
+                st.write("Your thoughtful responses have provided a snapshot of your current alignment. The following insights are designed to help you make conscious choices about your future direction.")
                 
                 st.write(response.text)
                 
                 # Add the structured call to action
                 st.markdown(
                     """
-                    ### Ready to Bridge the Gap?
+                    ### Ready to Choose Your Next Step?
                     
-                    The Compass Assessment has identified where your focus is needed most. Learning the system to consistently align your **V**alues, **I**nterests, **S**trengths, and **N**eeds is the single most powerful step you can take toward becoming a **Harmonious Leader**.
+                    The power lies in awareness and choice. Whether you decide to maintain your current path or explore a new Archetype, our resources are designed to equip you with the **V.I.S.N.** framework to support your intentional life design.
                     
                     * **For Comprehensive Learning:** [Join an upcoming offering of our Course on the Leader's Compass!](https://plei.thinkific.com/courses/compass-coming-soon)
                     * **For Personalized Guidance:** [Explore 1-on-1 Coaching to accelerate your transformation.](YOUR_COACHING_LINK_HERE)

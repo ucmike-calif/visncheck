@@ -20,7 +20,7 @@ ARCHETYPES = """
     'L L H H': 'The Unburdened Influencer (Effective Operator)',
     'H H L L': 'The High-Achieving Seeker (Aspiring Burnout)',
     'H L H L': 'The Mission-Driven Martyr (Driven Architect)',
-    'L H H L': 'The Joyful Producer (Busy Hedonist)',
+    'L H L H': 'The Joyful Producer (Busy Hedonist)',
     'H L L L': 'The Burnt-Out Visionary (Idealist in Distress)',
     'L H L L': 'The Contented Drifter (Distracted Escapist)',
     'L L L H': 'The Healthy Underachiever (Resilient Placeholder)',
@@ -219,7 +219,7 @@ if api_key:
                 answers_text = "\n".join([f"- {key.split(': ')[0]}: '{key.split(': ')[1]}' scored {RATING_SCALE[value]} ({value}/5)" for key, value in user_answers.items()])
                 
                 prompt = f"""
-Act as the expert coach and consultant for "The Leader's Compass" assessment. **Crucially, the concept of 'Leader' here refers to how the user is intentionally leading their life and designing their future, NOT corporate or professional leadership.**
+Analyze "The Leader's Compass" assessment results. **Crucially, the concept of 'Leader' here refers to how the user is intentionally leading their life and designing their future, NOT corporate or professional leadership.**
 
 The user has completed the assessment using a 1-5 scale (1=Strongly Disagree, 5=Strongly Agree). The questions are categorized into four dimensions: Purpose (P), Joy (J), Impact (I), and Well-being (W).
 

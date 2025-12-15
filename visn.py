@@ -109,25 +109,25 @@ RATING_OPTIONS = list(RATING_SCALE.keys())
 
 # --- THE QUESTIONS ---
 questions = [
-    # Purpose (Values)
+    # Purpose
     {"dimension": "Purpose", "text": "I spend my time contributing to something which gives me a sense of meaning and purpose."},
     {"dimension": "Purpose", "text": "My daily activities align with my deeper values and aspirations."},
     {"dimension": "Purpose", "text": "I wake up most days with a sense of motivation and intentionality."},
     {"dimension": "Purpose", "text": "I feel connected to something larger than myself."},
 
-    # Joy (Interests)
+    # Joy
     {"dimension": "Joy", "text": "There are many things in my life that I look forward to doing in the coming days/weeks."},
     {"dimension": "Joy", "text": "Most of the activities I spend my time on energize me."},
     {"dimension": "Joy", "text": "I make time for activities and relationships that bring me pleasure."},
     {"dimension": "Joy", "text": "I am able to experience and express genuine happiness and delight."},
     
-    # Impact (Strengths)
+    # Impact
     {"dimension": "Impact", "text": "The activities I spend my time on create meaningful value for others."},
     {"dimension": "Impact", "text": "My contributions are recognized and appreciated by those around me."},
     {"dimension": "Impact", "text": "I see tangible results from the effort I invest."},
     {"dimension": "Impact", "text": "I believe my actions contribute positively to my community and/or organization."},
     
-    # Well-being (Needs)
+    # Well-being
     {"dimension": "Well-being", "text": "I do not have to worry about paying my rent, utility and grocery bills."},
     {"dimension": "Well-being", "text": "I regularly engage in high quality exercise, diet and sleep."},
     {"dimension": "Well-being", "text": "Most days are reasonably free of stress and anxiety."},

@@ -1,46 +1,49 @@
 import streamlit as st
 import os
-# IMPORTANT: Using 'from google import genai' is more reliable with the 'google-genai' package in requirements.txt
+# Using the specific import structure for the 'google-genai' package
 from google import genai 
 
 # --- GOLD COLOR CONSTANT ---
 GOLD_COLOR = "#CC9900" 
 
-# --- CSS INJECTION FOR STYLING (Updated for reliable color and size) ---
+# --- CSS INJECTION FOR STYLING (FINALIZED) ---
 st.markdown(f"""
 <style>
-/* 1. Set base font size for better readability */
-.stApp {{
-    font-size: 18px; 
+/* 1. Set base font size for ALL app text for much better readability (e.g., 18px) */
+/* This targets the main app container and all standard Streamlit text elements */
+.stApp, .stText, .stMarkdown, .st-bh, .st-bb {{
+    font-size: 18px !important;
 }}
 
-/* 2. Style the main title using HTML for centering and force GOLD color */
+/* 2. Style the main title (h1) to be centered and GOLD */
 h1 {{
     text-align: center;
-    color: {GOLD_COLOR}; /* Gold/Primary Color */
+    color: {GOLD_COLOR}; 
     font-size: 48px;
 }}
 
-/* 3. Style section headers (h2) to be Gold */
+/* 3. Style section headers (h2) to be GOLD */
 h2 {{
-    color: {GOLD_COLOR}; /* Gold/Primary Color */
+    color: {GOLD_COLOR}; 
     font-size: 32px;
 }}
 
-/* 4. Style sub-headers (h3) to be Gold */
+/* 4. Style sub-headers (h3) to be GOLD (e.g., Rating Scale) */
 h3 {{
-    color: {GOLD_COLOR}; /* Gold/Primary Color */
+    color: {GOLD_COLOR}; 
     font-size: 24px;
 }}
 
-/* 5. Ensure text inside radio buttons uses the theme text color */
+/* 5. Ensure text inside radio buttons uses the theme text color and is readable */
 div.stRadio > label > div > div {{
-    color: var(--text-color);
+    color: var(--text-color); /* Usually White against a dark background */
+    font-size: 18px;
 }}
 
-/* 6. Ensure question text itself is readable (using the base font size) */
+/* 6. Ensure the question text itself is readable (using the base font size) */
+/* The question text is often rendered as a paragraph within a markdown container */
 div[data-testid="stMarkdownContainer"] p {{
-    font-size: 18px; 
+    font-size: 18px !important; 
 }}
 </style>
 """, unsafe_allow_html=True)
@@ -49,10 +52,10 @@ div[data-testid="stMarkdownContainer"] p {{
 st.set_page_config(page_title="The Leader's Compass", page_icon="🧭")
 
 # --- APP TITLE & DESCRIPTION ---
-# FIXED: Using inline styling with GOLD_COLOR to force the entire title to be gold.
+# Title is forced gold by the h1 CSS rule AND the inline style (redundancy for safety)
 st.markdown(f"<h1 style='text-align: center; color: {GOLD_COLOR};'>Free **VISN** Check!</h1>", unsafe_allow_html=True)
 
-# These sections now use the H2 styling defined in the CSS, making them gold
+# H2 headers are gold from the CSS
 st.markdown("## Want to live a life of Purpose, Joy, Impact and Well-being?")
 st.markdown("""
 This FREE 16-question survey will help you identify misalignments with your **V**alues, **I**nterests, **S**trengths and **N**eeds and determine next steps to a better life! 

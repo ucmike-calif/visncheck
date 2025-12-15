@@ -21,7 +21,7 @@ h1 {{
     font-size: 48px;
 }}
 
-/* 3. Style dimension headers (H2) to be Gold */
+/* 3. Style dimension headers (H2) to be Gold (Used in the Survey Section) */
 h2 {{
     color: {GOLD_COLOR}; /* Gold/Primary Color */
     font-size: 32px;
@@ -33,8 +33,7 @@ h3 {{
     font-size: 24px;
 }}
 
-/* 5. Target standard Streamlit paragraph text (used for description, rating scale info, and post-report text) 
-   and enforce the larger font size for the second smallest text */
+/* 5. Target standard Streamlit paragraph text and enforce the larger font size */
 div[data-testid="stMarkdownContainer"] p, div[data-testid="stText"] {{
     font-size: 18px !important; 
     line-height: 1.5;
@@ -43,13 +42,7 @@ div[data-testid="stMarkdownContainer"] p, div[data-testid="stText"] {{
 /* 6. Ensure text inside radio buttons uses the theme text color and is readable */
 div.stRadio > label > div > div {{
     color: var(--text-color); 
-    font-size: 18px; /* Smallest text size made bigger */
-}}
-
-/* 7. Ensure the introductory paragraph text (which contains the colored words) is also readable */
-/* We target the div containing the introduction to ensure the size is applied */
-.stMarkdown > div:nth-child(2) p {{
-    font-size: 18px !important;
+    font-size: 18px; 
 }}
 </style>
 """, unsafe_allow_html=True)
@@ -58,14 +51,13 @@ div.stRadio > label > div > div {{
 st.set_page_config(page_title="The Leader's Compass", page_icon="🧭")
 
 # --- APP TITLE & DESCRIPTION ---
-# Title is forced gold by the h1 CSS rule AND the inline style
+# Title is gold
 st.markdown(f"<h1 style='text-align: center; color: {GOLD_COLOR};'>Free **VISN** Check!</h1>", unsafe_allow_html=True)
 st.markdown("## Want to live a life of Purpose, Joy, Impact and Well-being?")
 
-# UPDATED: Using HTML span with inline style to force the GOLD color for the dimension names.
+# UPDATED: Changed introductory paragraph to make V.I.S.N. words gold using HTML span styling
 st.markdown(f"""
-This FREE 16-question survey will help you identify misalignments with your **V**alues, **I**nterests, **S**trengths and **N**eeds and determine next steps to a better life! 
-The four key dimensions assessed are <span style='color: {GOLD_COLOR};'>**Purpose**</span>, <span style='color: {GOLD_COLOR};'>**Joy**</span>, <span style='color: {GOLD_COLOR};'>**Impact**</span>, and <span style='color: {GOLD_COLOR};'>**Well-being**</span>.
+This FREE 16-question survey will help you identify misalignments with your <span style='color: {GOLD_COLOR};'>**V**alues</span>, <span style='color: {GOLD_COLOR};'>**I**nterests</span>, <span style='color: {GOLD_COLOR};'>**S**trengths</span> and <span style='color: {GOLD_COLOR};'>**N**eeds</span> and determine next steps to a better life! 
 """, unsafe_allow_html=True)
 
 # --- API KEY SETUP ---
@@ -138,7 +130,7 @@ if api_key:
         st.write(f"**1:** Strongly Disagree, **2:** Disagree, **3:** Neutral, **4:** Agree, **5:** Strongly Agree")
 
         for dimension, q_list in dimension_questions.items():
-            # Dimension Headers (H2) are gold from the CSS
+            # Dimension Headers (H2) are now guaranteed to be GOLD by the CSS rule #3
             st.markdown(f"## {dimension}")
             for text in q_list:
                 key = f"Q{q_counter} ({dimension}): {text}"

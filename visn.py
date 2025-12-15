@@ -45,13 +45,13 @@ h1 {{
     font-size: 48px;
 }}
 
-/* 3. Style dimension headers (H2) to be Gold (Used in the Survey Section) */
+/* 3. Style dimension headers (H2) and report headers (H2) to be Gold */
 h2 {{
     color: {GOLD_COLOR}; /* Gold/Primary Color */
     font-size: 32px;
 }}
 
-/* 4. Style sub-headers (H3) to be Gold */
+/* 4. Style sub-headers (H3) and report section headers (H3) to be Gold */
 h3 {{
     color: {GOLD_COLOR}; /* Gold/Primary Color */
     font-size: 24px;
@@ -258,7 +258,7 @@ Present the output using Markdown in a professional format, using H3 headers for
                 st.markdown("""
                 Your thoughtful responses have provided a snapshot of how you are currently experiencing your life. The following insights are designed to help you make conscious choices about the future you are designing.
 
-                While there is no perfect, permanent “balance” of alignment between one’s values, interests, strengths, or needs (life’s just too messy for that), significant benefit can be gained from:
+                While there is no perfect, permanent “balance” of alignment between one’s life and their values, interests, strengths, or needs (life’s just too messy for that), significant benefit can be gained from:
                 
                 1.  **Better understanding/appreciating** “where you are” (i.e., your current experience),
                 2.  **Reflecting** on how the current experience is working for you,

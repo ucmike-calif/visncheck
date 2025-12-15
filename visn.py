@@ -89,7 +89,7 @@ st.markdown("## Are You **Leading Yourself** to a life of Purpose, Joy, Impact a
 # V.I.S.N. words are gold
 # **Crucial text change here:** Emphasize choice and self-direction
 st.markdown(f"""
-This FREE 16-question survey uses the four points of The Self-Leader's Compass—<span style='color: {GOLD_COLOR};'>**V**alues</span>, <span style='color: {GOLD_COLOR};'>**I**nterests</span>, <span style='color: {GOLD_COLOR};'>**S**trengths</span> and <span style='color: {GOLD_COLOR};'>**N**eeds</span>—to help you figure out where you are and decide where you want to go by taking ownership of your choices and future.
+This FREE 16-question survey uses the four points of The Leader's Compass—<span style='color: {GOLD_COLOR};'>**V**alues</span>, <span style='color: {GOLD_COLOR};'>**I**nterests</span>, <span style='color: {GOLD_COLOR};'>**S**trengths</span> and <span style='color: {GOLD_COLOR};'>**N**eeds</span>—to help you figure out where you are and decide where you want to go by taking ownership of your choices and future.
 """, unsafe_allow_html=True)
 
 # --- API KEY SETUP ---

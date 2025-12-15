@@ -231,9 +231,9 @@ Here are the Archetype definitions. Use a threshold of 3.5 to determine if a dim
 ARCHETYPES:
 {ARCHETYPES}
 
-Your Task is to generate the "Personalized Insights" report with the following, client-centered structure. **The output for the Narrative Profile and The Path to Choice sections MUST use Markdown H3 headers. Ensure the output for the Narrative Profile heading is exactly '### Narrative Profile'.**
+Your Task is to generate the "Personalized Insights" report with the following, client-centered structure.
 
-1. **Calculate and Identify:** Calculate the average score for each dimension (P, J, I, W) and determine the H/L code to identify the user's Archetype name.
+1. **Calculate and Identify:** Calculate the average score for each dimension (P, J, I, W) and determine the H/L code to identify the user's Archetype name. **Do NOT print this calculation or the Archetype Code/Name in the final output.**
 2. **Narrative Profile:** Write a 'Narrative Profile' (**max 75 words**) that confirms the identified Archetype name within the first sentence, speaks empathetically to their current strengths and challenges (the H's and L's), and clearly defines their current position. The header for this must be '### Narrative Profile'.
 3. **The Path to Choice:** Write a compelling reflection section (**approx 100-120 words**) that guides the user toward conscious choice using the following logic. The header for this must be '### The Path to Choice'.
     * **Start with Reflection:** Begin by asking the user to reflect: "Now that you see your pattern, is this current situation *working* for you?" Emphasize that there is no one 'correct' balance for everyone forever.

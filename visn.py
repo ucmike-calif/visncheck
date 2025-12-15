@@ -1,50 +1,61 @@
 import streamlit as st
-import google.generativeai as genai
-import os 
+import os
+# IMPORTANT: Using 'from google import genai' is more reliable with the 'google-genai' package in requirements.txt
+from google import genai 
 
-# --- CSS INJECTION FOR STYLING ---
-# This CSS handles color contrast, centers the title, and styles headers.
-st.markdown("""
+# --- GOLD COLOR CONSTANT ---
+GOLD_COLOR = "#CC9900" 
+
+# --- CSS INJECTION FOR STYLING (Updated for reliable color and size) ---
+st.markdown(f"""
 <style>
-/* 1. Ensure text is readable against the dark background theme */
-div.stRadio > label > div > div {
-    color: var(--text-color); 
-}
+/* 1. Set base font size for better readability */
+.stApp {{
+    font-size: 18px; 
+}}
 
-/* 2. Style the main title using HTML for centering and color */
-h1 {
+/* 2. Style the main title using HTML for centering and force GOLD color */
+h1 {{
     text-align: center;
-    color: #CC9900; /* Gold/Primary Color */
-}
+    color: {GOLD_COLOR}; /* Gold/Primary Color */
+    font-size: 48px;
+}}
 
-/* 3. Style dimension headers */
-h2 {
-    color: #CC9900; /* Gold/Primary Color */
-}
+/* 3. Style section headers (h2) to be Gold */
+h2 {{
+    color: {GOLD_COLOR}; /* Gold/Primary Color */
+    font-size: 32px;
+}}
 
-/* 4. Removed the complex, fragile CSS selector that targeted internal Streamlit 
-   dividers, which was likely causing the 'Error running app' on startup. */
+/* 4. Style sub-headers (h3) to be Gold */
+h3 {{
+    color: {GOLD_COLOR}; /* Gold/Primary Color */
+    font-size: 24px;
+}}
+
+/* 5. Ensure text inside radio buttons uses the theme text color */
+div.stRadio > label > div > div {{
+    color: var(--text-color);
+}}
+
+/* 6. Ensure question text itself is readable (using the base font size) */
+div[data-testid="stMarkdownContainer"] p {{
+    font-size: 18px; 
+}}
 </style>
 """, unsafe_allow_html=True)
 
 # --- CONFIGURATION ---
-# REMINDER: For the colors defined in [theme] below to work, 
-# you MUST have a file named 'compass-app/.streamlit/config.toml' in your GitHub repo 
-# containing the color definitions:
-# [theme]
-# primaryColor = "#CC9900" 
-# backgroundColor = "#800000"
-# secondaryBackgroundColor = "#A00000" 
-# textColor = "#FFFFFF" 
-# font = "sans serif"
 st.set_page_config(page_title="The Leader's Compass", page_icon="🧭")
 
 # --- APP TITLE & DESCRIPTION ---
-# Use custom HTML/Markdown for a centralized, branded title
-st.markdown("<h1 style='text-align: center;'>Free VISN Check!</h1>", unsafe_allow_html=True)
+# FIXED: Using inline styling with GOLD_COLOR to force the entire title to be gold.
+st.markdown(f"<h1 style='text-align: center; color: {GOLD_COLOR};'>Free **VISN** Check!</h1>", unsafe_allow_html=True)
+
+# These sections now use the H2 styling defined in the CSS, making them gold
 st.markdown("## Want to live a life of Purpose, Joy, Impact and Well-being?")
 st.markdown("""
-This FREE 16-question survey will help you identify misalignments with your **V**alues, **I**nterests, **S**trengths and **N**eeds and point you in a direction to a better life! 
+This FREE 16-question survey will help you identify misalignments with your **V**alues, **I**nterests, **S**trengths and **N**eeds and determine next steps to a better life! 
 """)
 
 # --- API KEY SETUP ---
@@ -70,27 +81,31 @@ RATING_OPTIONS = list(RATING_SCALE.keys())
 
 # --- THE QUESTIONS ---
 questions = [
-
+    # Purpose
     {"dimension": "Purpose", "text": "I spend my time contributing to something which gives me a sense of meaning and purpose."},
     {"dimension": "Purpose", "text": "My daily activities align with my deeper values and aspirations."},
     {"dimension": "Purpose", "text": "I wake up most days with a sense of motivation and intentionality."},
     {"dimension": "Purpose", "text": "I feel connected to something larger than myself."},
 
+    # Joy
     {"dimension": "Joy", "text": "There are many things in my life that I look forward to doing in the coming days/weeks."},
     {"dimension": "Joy", "text": "Most of the activities I spend my time on energize me."},
     {"dimension": "Joy", "text": "I make time for activities and relationships that bring me pleasure."},
     {"dimension": "Joy", "text": "I am able to experience and express genuine happiness and delight."},
     
+    # Impact
     {"dimension": "Impact", "text": "The activities I spend my time on create meaningful value for others."},
     {"dimension": "Impact", "text": "My contributions are recognized and appreciated by those around me."},
     {"dimension": "Impact", "text": "I see tangible results from the effort I invest."},
     {"dimension": "Impact", "text": "I believe my actions contribute positively to my community and/or organization."},
     
+    # Well-being
     {"dimension": "Well-being", "text": "I do not have to worry about paying my rent, utility and grocery bills."},
     {"dimension": "Well-being", "text": "I regularly engage in high quality exercise, diet and sleep."},
     {"dimension": "Well-being", "text": "Most days are reasonably free of stress and anxiety."},
     {"dimension": "Well-being", "text": "I possess a reasonable number of strong, supportive personal and professional relationships."},
 ]
+
 # Group questions by dimension for clean display
 dimension_questions = {}
 for q in questions:
@@ -105,21 +120,22 @@ q_counter = 1
 
 # Only configure the API if the key exists
 if api_key:
-    genai.configure(api_key=api_key)
+    # Initialize the client from the base import
+    client = genai.Client(api_key=api_key)
     
     with st.form("assessment_form"):
-        # Display Rating Scale clearly at the top
+        # Display Rating Scale clearly at the top (H3 is gold from CSS)
         st.markdown("### Rating Scale")
         st.write(f"**1:** Strongly Disagree, **2:** Disagree, **3:** Neutral, **4:** Agree, **5:** Strongly Agree")
 
         for dimension, q_list in dimension_questions.items():
-            # Dimension Headers will use the gold color due to H2 CSS styling
+            # Dimension Headers (H2) will use the gold color due to H2 CSS styling
             st.markdown(f"## {dimension}")
             for text in q_list:
                 key = f"Q{q_counter} ({dimension}): {text}"
                 st_key = f"radio_{q_counter}"
                 
-                # Combine question number and text into the radio label for tight grouping
+                # Combine question number and text into the radio label
                 question_label = f"**{q_counter}.** {text}"
                 
                 answer = st.radio(
@@ -135,7 +151,7 @@ if api_key:
                 # ADD SPACE/DIVIDER AFTER EACH QUESTION/ANSWER 
                 st.markdown("---")
         
-        # The default st.form separator is outside the loop
+        # The submit button is automatically styled by the CSS update
         submitted = st.form_submit_button("Submit Assessment and Generate Report")
 
     # --- AI GENERATION ---
@@ -170,11 +186,12 @@ if api_key:
                 """
                 
                 # 2. Call Gemini
-                model = genai.GenerativeModel('gemini-2.5-flash')
+                model = client.models.get('gemini-2.5-flash')
                 response = model.generate_content(prompt)
                 
                 # 3. Display Results
                 st.markdown("---")
+                # H2 heading for the report title (will be gold)
                 st.markdown("## What is Your Compass Telling You?")
                 st.write("Your thoughtful responses have revealed meaningful insights about your current alignment across the four dimensions of a fulfilling life. Below you'll find a personalized narrative to guide your next steps.")
                 

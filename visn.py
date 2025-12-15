@@ -38,11 +38,11 @@ body, .stApp, .stText, .stMarkdown, .st-bh, .st-bb {{
     font-size: 18px !important; 
 }}
 
-/* 2. Style the main title using HTML for centering and color */
+/* 2. Style the main title using HTML for centering and color (MADE BIGGER) */
 h1 {{
     text-align: center;
     color: {GOLD_COLOR}; /* Gold/Primary Color */
-    font-size: 48px;
+    font-size: 60px; /* INCREASED SIZE */
 }}
 
 /* 3. Style dimension headers (H2) and report headers (H2) to be Gold */
@@ -51,9 +51,9 @@ h2 {{
     font-size: 32px;
 }}
 
-/* 4. Style sub-headers (H3) and report section headers (H3) to be Gold */
+/* 4. Style sub-headers (H3) and report section headers (H3) to be Gold (ENFORCING COLOR) */
 h3 {{
-    color: {GOLD_COLOR}; /* Gold/Primary Color */
+    color: {GOLD_COLOR} !important; /* Gold/Primary Color (Using !important to override Streamlit internal styling) */
     font-size: 24px;
 }}
 
@@ -82,12 +82,12 @@ st.set_page_config(page_title="The Leader's Compass", page_icon="🧭")
 
 # --- APP TITLE & DESCRIPTION ---
 # Title is gold
-st.markdown(f"<h1 style='text-align: center; color: {GOLD_COLOR};'>Free **VISN** Check!</h1>", unsafe_allow_html=True)
+st.markdown(f"<h1 style='text-align: center; color: {GOLD_COLOR};'>Free VISN Check!</h1>", unsafe_allow_html=True)
 # Updated to focus on the verb "leading"
 st.markdown("## Are You **Intentionally Leading** Yourself to a life of Purpose, Joy, Impact and Well-being?")
 
-# V.I.S.N. words are gold
-# Updated to "The Leader's Compass"
+# V.I.S.N. words are gold, BOLDING IS REMOVED FROM VISN IN THE H1.
+# Updated to "The Leader's Compass" and removed ** around VISN
 st.markdown(f"""
 This FREE 16-question survey uses the four points of The Leader's Compass—<span style='color: {GOLD_COLOR};'>**V**alues</span>, <span style='color: {GOLD_COLOR};'>**I**nterests</span>, <span style='color: {GOLD_COLOR};'>**S**trengths</span> and <span style='color: {GOLD_COLOR};'>**N**eeds</span>—to help you figure out where you are and decide where you want to go by taking ownership of your choices and future.
 """, unsafe_allow_html=True)
@@ -231,11 +231,11 @@ Here are the Archetype definitions. Use a threshold of 3.5 to determine if a dim
 ARCHETYPES:
 {ARCHETYPES}
 
-Your Task is to generate the "Personalized Insights" report with the following, client-centered structure. **The report MUST start with the 'Narrative Profile' heading, immediately following the introductory text. Do not include a separate heading for the Archetype name.**
+Your Task is to generate the "Personalized Insights" report with the following, client-centered structure. **The output for the Narrative Profile and The Path to Choice sections MUST use Markdown H3 headers. Ensure the output for the Narrative Profile heading is exactly '### Narrative Profile'.**
 
 1. **Calculate and Identify:** Calculate the average score for each dimension (P, J, I, W) and determine the H/L code to identify the user's Archetype name.
-2. **Narrative Profile:** Write a 'Narrative Profile' (**max 75 words**) that confirms the identified Archetype name within the first sentence, speaks empathetically to their current strengths and challenges (the H's and L's), and clearly defines their current position. Use H3 for the heading.
-3. **The Path to Choice:** Write a compelling reflection section (**approx 100-120 words**) that guides the user toward conscious choice using the following logic. Use H3 for the heading.
+2. **Narrative Profile:** Write a 'Narrative Profile' (**max 75 words**) that confirms the identified Archetype name within the first sentence, speaks empathetically to their current strengths and challenges (the H's and L's), and clearly defines their current position. The header for this must be '### Narrative Profile'.
+3. **The Path to Choice:** Write a compelling reflection section (**approx 100-120 words**) that guides the user toward conscious choice using the following logic. The header for this must be '### The Path to Choice'.
     * **Start with Reflection:** Begin by asking the user to reflect: "Now that you see your pattern, is this current situation *working* for you?" Emphasize that there is no one 'correct' balance for everyone forever.
     * **If the overall alignment is high (3 or 4 H's):**
         * **Conscious Acceptance:** State that it is great they can consciously choose this path.
@@ -244,7 +244,7 @@ Your Task is to generate the "Personalized Insights" report with the following, 
         * **Hope and Vision:** If they can't get themselves to "choose the bad" (the friction is too much), describe how things might be significantly better for them if their **lowest scoring area(s) were to improve**. Focus on the *feeling* of improvement (e.g., if Joy is low, describe feeling energized and excited again).
         * **Invitation to Act:** Invite them to make one small, immediate choice for a step they can take in a different direction.
     
-Present the output using Markdown in a professional format, using H3 headers for sections.
+Present the output using Markdown in a professional format.
 """
                 
                 # 2. Call Gemini
@@ -253,12 +253,12 @@ Present the output using Markdown in a professional format, using H3 headers for
                 
                 # 3. Display Results
                 st.markdown("---")
-                # START: CUSTOM INTRODUCTORY SECTION
+                # START: CUSTOM INTRODUCTORY SECTION (H2 is gold)
                 st.markdown("## What is Your Compass Telling You?")
                 st.markdown("""
                 Your thoughtful responses have provided a snapshot of how you are currently experiencing your life. The following insights are designed to help you make conscious choices about the future you are designing.
 
-                While there is no perfect, permanent “balance” of alignment between one’s life and their values, interests, strengths, or needs (life’s just too messy for that), significant benefit can be gained from:
+                While there is no perfect, permanent “balance” of alignment between one’s values, interests, strengths, or needs (life’s just too messy for that), significant benefit can be gained from:
                 
                 1.  **Better understanding/appreciating** “where you are” (i.e., your current experience),
                 2.  **Reflecting** on how the current experience is working for you,
@@ -266,9 +266,10 @@ Present the output using Markdown in a professional format, using H3 headers for
                 """)
                 # END: CUSTOM INTRODUCTORY SECTION
                 
+                # The AI output below contains the H3 headers for Narrative Profile and The Path to Choice.
                 st.write(response.text)
                 
-                # Add the structured call to action
+                # Add the structured call to action (H3 is gold)
                 st.markdown(
                     """
                     ### Ready to Choose Your Next Step?

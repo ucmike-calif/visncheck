@@ -41,7 +41,7 @@ st.set_page_config(page_title="The Leader's Compass", page_icon="🧭")
 
 # --- APP TITLE & DESCRIPTION ---
 # UPDATED: Use inline style to ensure the gold color is applied directly to the title text
-st.markdown("<h1 style='text-align: center; color: #CC9900;'>Free VISN Check!</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #CC9900;'>Free **VISN** Check!</h1>", unsafe_allow_html=True)
 st.markdown("## Want to live a life of Purpose, Joy, Impact and Well-being?")
 st.markdown("""
 This FREE 16-question survey will help you identify misalignments with your **V**alues, **I**nterests, **S**trengths and **N**eeds and determine next steps to a better life! 

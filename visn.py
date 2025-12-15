@@ -231,11 +231,11 @@ Here are the Archetype definitions. Use a threshold of 3.5 to determine if a dim
 ARCHETYPES:
 {ARCHETYPES}
 
-Your Task is to generate the "Personalized Insights" report with the following, client-centered structure. **Do not create a separate heading for Archetype ID; integrate the Archetype identification into the Narrative Profile.**
+Your Task is to generate the "Personalized Insights" report with the following, client-centered structure. **The report MUST start with the 'Narrative Profile' heading, immediately following the introductory text. Do not include a separate heading for the Archetype name.**
 
 1. **Calculate and Identify:** Calculate the average score for each dimension (P, J, I, W) and determine the H/L code to identify the user's Archetype name.
-2. **Narrative Profile:** Write a 'Narrative Profile' (**max 75 words**) that confirms the identified Archetype name, speaks empathetically to their current strengths and challenges (the H's and L's), and clearly defines their current position.
-3. **The Path to Choice:** Write a compelling reflection section (**approx 100-120 words**) that guides the user toward conscious choice using the following logic:
+2. **Narrative Profile:** Write a 'Narrative Profile' (**max 75 words**) that confirms the identified Archetype name within the first sentence, speaks empathetically to their current strengths and challenges (the H's and L's), and clearly defines their current position. Use H3 for the heading.
+3. **The Path to Choice:** Write a compelling reflection section (**approx 100-120 words**) that guides the user toward conscious choice using the following logic. Use H3 for the heading.
     * **Start with Reflection:** Begin by asking the user to reflect: "Now that you see your pattern, is this current situation *working* for you?" Emphasize that there is no one 'correct' balance for everyone forever.
     * **If the overall alignment is high (3 or 4 H's):**
         * **Conscious Acceptance:** State that it is great they can consciously choose this path.
@@ -244,7 +244,7 @@ Your Task is to generate the "Personalized Insights" report with the following, 
         * **Hope and Vision:** If they can't get themselves to "choose the bad" (the friction is too much), describe how things might be significantly better for them if their **lowest scoring area(s) were to improve**. Focus on the *feeling* of improvement (e.g., if Joy is low, describe feeling energized and excited again).
         * **Invitation to Act:** Invite them to make one small, immediate choice for a step they can take in a different direction.
     
-Present the output using Markdown in a professional format, using H3 headers for sections. Ensure the final output includes the Archetype name prominently.
+Present the output using Markdown in a professional format, using H3 headers for sections.
 """
                 
                 # 2. Call Gemini
@@ -253,18 +253,18 @@ Present the output using Markdown in a professional format, using H3 headers for
                 
                 # 3. Display Results
                 st.markdown("---")
-                # START: NEW INTRODUCTORY SECTION
+                # START: CUSTOM INTRODUCTORY SECTION
                 st.markdown("## What is Your Compass Telling You?")
                 st.markdown("""
+                Your thoughtful responses have provided a snapshot of how you are currently experiencing your life. The following insights are designed to help you make conscious choices about the future you are designing.
+
                 While there is no perfect, permanent “balance” of alignment between one’s values, interests, strengths, or needs (life’s just too messy for that), significant benefit can be gained from:
                 
                 1.  **Better understanding/appreciating** “where you are” (i.e., your current experience),
                 2.  **Reflecting** on how the current experience is working for you,
                 3.  **Choosing** whether to accept the current experience as it is (not just the good, but the bad and ugly that go along with it) or to use the compass to inform some choices for taking steps in a different direction that may create a different experience that works better for you.
-                
-                The following insights are designed to help you make conscious choices about the future you are designing.
                 """)
-                # END: NEW INTRODUCTORY SECTION
+                # END: CUSTOM INTRODUCTORY SECTION
                 
                 st.write(response.text)
                 

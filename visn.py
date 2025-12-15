@@ -6,11 +6,10 @@ from google import genai
 # --- GOLD COLOR CONSTANT ---
 GOLD_COLOR = "#CC9900" 
 
-# --- CSS INJECTION FOR STYLING (FINALIZED) ---
+# --- CSS INJECTION FOR STYLING (Color and Readability Focus) ---
 st.markdown(f"""
 <style>
 /* 1. Set base font size for ALL app text for much better readability (e.g., 18px) */
-/* This targets the main app container and all standard Streamlit text elements */
 .stApp, .stText, .stMarkdown, .st-bh, .st-bb {{
     font-size: 18px !important;
 }}
@@ -41,9 +40,23 @@ div.stRadio > label > div > div {{
 }}
 
 /* 6. Ensure the question text itself is readable (using the base font size) */
-/* The question text is often rendered as a paragraph within a markdown container */
 div[data-testid="stMarkdownContainer"] p {{
     font-size: 18px !important; 
+}}
+
+/* 7. Style the Submit Button for Gold background and dark text for contrast */
+button[data-testid="stFormSubmitButton"] {{
+    background-color: {GOLD_COLOR};
+    color: #400000; /* Use a dark color for text on the gold button */
+    font-weight: bold;
+    border: none;
+}}
+
+/* 8. Style the Retake Button to match the theme */
+button:not([data-testid="stFormSubmitButton"]) {{
+    background-color: var(--secondary-background-color); /* Darker red from theme */
+    color: {GOLD_COLOR}; 
+    border: 1px solid {GOLD_COLOR};
 }}
 </style>
 """, unsafe_allow_html=True)
@@ -52,7 +65,7 @@ div[data-testid="stMarkdownContainer"] p {{
 st.set_page_config(page_title="The Leader's Compass", page_icon="🧭")
 
 # --- APP TITLE & DESCRIPTION ---
-# Title is forced gold by the h1 CSS rule AND the inline style (redundancy for safety)
+# Title is forced gold by the h1 CSS rule AND the inline style
 st.markdown(f"<h1 style='text-align: center; color: {GOLD_COLOR};'>Free **VISN** Check!</h1>", unsafe_allow_html=True)
 
 # H2 headers are gold from the CSS

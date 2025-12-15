@@ -20,7 +20,7 @@ ARCHETYPES = """
     'L L H H': 'The Unburdened Influencer (Effective Operator)',
     'H H L L': 'The High-Achieving Seeker (Aspiring Burnout)',
     'H L H L': 'The Mission-Driven Martyr (Driven Architect)',
-    'L H H L': 'The Joyful Producer (Busy Hedonist)',
+    'L H L H': 'The Joyful Producer (Busy Hedonist)',
     'H L L L': 'The Burnt-Out Visionary (Idealist in Distress)',
     'L H L L': 'The Contented Drifter (Distracted Escapist)',
     'L L L H': 'The Healthy Underachiever (Resilient Placeholder)',
@@ -89,7 +89,7 @@ st.markdown("## Are You **Leading Yourself** to a life of Purpose, Joy, Impact a
 # V.I.S.N. words are gold
 # **Crucial text change here:** Emphasize choice and self-direction
 st.markdown(f"""
-This FREE 16-question survey uses the four points of The Leader's Compass—<span style='color: {GOLD_COLOR};'>**V**alues</span>, <span style='color: {GOLD_COLOR};'>**I**nterests</span>, <span style='color: {GOLD_COLOR};'>**S**trengths</span> and <span style='color: {GOLD_COLOR};'>**N**eeds</span>—to help you figure out where you are and decide where you want to go by taking ownership of your choices and future.
+This FREE 16-question survey uses the four points of The Self-Leader's Compass—<span style='color: {GOLD_COLOR};'>**V**alues</span>, <span style='color: {GOLD_COLOR};'>**I**nterests</span>, <span style='color: {GOLD_COLOR};'>**S**trengths</span> and <span style='color: {GOLD_COLOR};'>**N**eeds</span>—to help you figure out where you are and decide where you want to go by taking ownership of your choices and future.
 """, unsafe_allow_html=True)
 
 # --- API KEY SETUP ---
@@ -231,13 +231,18 @@ Here are the Archetype definitions. Use a threshold of 3.5 to determine if a dim
 ARCHETYPES:
 {ARCHETYPES}
 
-Your Task is to generate the "Personalized Insights" report with the following, concise, client-centered structure:
+Your Task is to generate the "Personalized Insights" report with the following, client-centered structure:
 
 1. **Determine the Archetype:** Calculate the average score for each dimension (P, J, I, W) and determine the H/L code to identify the user's Archetype name.
 2. **Narrative Profile:** Write a 'Narrative Profile' (**max 75 words**) that confirms the identified Archetype name, speaks empathetically to their current strengths and challenges (the H's and L's), and clearly defines their current position.
-3. **The Path to Choice:** Write a section (**max 50 words**) that guides the user toward conscious choice:
-    * **If the overall alignment is high (3 or 4 H's):** Validate that the current state is likely working. Invite them to make a *conscious, intentional choice* to embrace this path for now, and encourage a future re-assessment.
-    * **If the misalignment is clear (2 or more L's):** Validate the friction they feel. Invite them to explore new, intentional choices that could lead to a different, more sustainable Archetype. Focus on **empowered agency** and **intentional self-leadership**.
+3. **The Path to Choice:** Write a compelling reflection section (**approx 100-120 words**) that guides the user toward conscious choice using the following logic:
+    * **Start with Reflection:** Begin by asking the user to reflect: "Now that you see your pattern, is this current situation *working* for you?" Emphasize that there is no one 'correct' balance for everyone forever.
+    * **If the overall alignment is high (3 or 4 H's):**
+        * **Conscious Acceptance:** State that it is great they can consciously choose this path.
+        * **Warning Signs:** Give them 1-2 specific warning signs related to their **lowest scoring low area** (L) to look out for, suggesting when they may need to re-assess whether their current situation is still their intentional choice (e.g., if Well-being is Low, the warning sign might be chronic fatigue or relationship strain).
+    * **If the misalignment is clear (2 or more L's):**
+        * **Hope and Vision:** If they can't get themselves to "choose the bad" (the friction is too much), describe how things might be significantly better for them if their **lowest scoring area(s) were to improve**. Focus on the *feeling* of improvement (e.g., if Joy is low, describe feeling energized and excited again).
+        * **Invitation to Act:** Invite them to make one small, immediate choice for a step they can take in a different direction.
     
 Present the output using Markdown in a professional format, using H3 headers for sections. Ensure the final output includes the Archetype name prominently.
 """

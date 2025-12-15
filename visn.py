@@ -75,12 +75,12 @@ st.set_page_config(page_title="The Leader's Compass", page_icon="🧭")
 
 # --- APP TITLE & DESCRIPTION ---
 # Title is gold
-st.markdown(f"<h1 style='text-align: center; color: {GOLD_COLOR};'>Free VISN Check!</h1>", unsafe_allow_html=True)
+st.markdown(f"<h1 style='text-align: center; color: {GOLD_COLOR};'>Free **VISN** Check!</h1>", unsafe_allow_html=True)
 st.markdown("## Want to live a life of Purpose, Joy, Impact and Well-being?")
 
 # V.I.S.N. words are gold
 st.markdown(f"""
-This FREE 16-question survey will help you identify misalignments with the four points of The Leader's Compass <span style='color: {GOLD_COLOR};'>**V**alues</span>, <span style='color: {GOLD_COLOR};'>**I**nterests</span>, <span style='color: {GOLD_COLOR};'>**S**trengths</span> and <span style='color: {GOLD_COLOR};'>**N**eeds</span> and determine next steps to a better life! 
+This FREE 16-question survey will help you identify misalignments with your <span style='color: {GOLD_COLOR};'>**V**alues</span>, <span style='color: {GOLD_COLOR};'>**I**nterests</span>, <span style='color: {GOLD_COLOR};'>**S**trengths</span> and <span style='color: {GOLD_COLOR};'>**N**eeds</span> and determine next steps to a better life! 
 """, unsafe_allow_html=True)
 
 # --- API KEY SETUP ---
@@ -110,35 +110,38 @@ RATING_OPTIONS = list(RATING_SCALE.keys())
 # --- THE QUESTIONS ---
 questions = [
     # Purpose
-    {"dimension": "Purpose", "text": "I spend my time contributing to something which gives me a sense of meaning and purpose."},
-    {"dimension": "Purpose", "text": "My daily activities align with my deeper values and aspirations."},
-    {"dimension": "Purpose", "text": "I wake up most days with a sense of motivation and intentionality."},
-    {"dimension": "Purpose", "text": "I feel connected to something larger than myself."},
+    {"dimension": "Purpose (Values)", "text": "I spend my time contributing to something which gives me a sense of meaning and purpose."},
+    {"dimension": "Purpose (Values)", "text": "My daily activities align with my deeper values and aspirations."},
+    {"dimension": "Purpose (Values)", "text": "I wake up most days with a sense of motivation and intentionality."},
+    {"dimension": "Purpose (Values)", "text": "I feel connected to something larger than myself."},
 
     # Joy
-    {"dimension": "Joy", "text": "There are many things in my life that I look forward to doing in the coming days/weeks."},
-    {"dimension": "Joy", "text": "Most of the activities I spend my time on energize me."},
-    {"dimension": "Joy", "text": "I make time for activities and relationships that bring me pleasure."},
-    {"dimension": "Joy", "text": "I am able to experience and express genuine happiness and delight."},
+    {"dimension": "Joy (Interests)", "text": "There are many things in my life that I look forward to doing in the coming days/weeks."},
+    {"dimension": "Joy (Interests)", "text": "Most of the activities I spend my time on energize me."},
+    {"dimension": "Joy (Interests)", "text": "I make time for activities and relationships that bring me pleasure."},
+    {"dimension": "Joy (Interests)", "text": "I am able to experience and express genuine happiness and delight."},
     
     # Impact
-    {"dimension": "Impact", "text": "The activities I spend my time on create meaningful value for others."},
-    {"dimension": "Impact", "text": "My contributions are recognized and appreciated by those around me."},
-    {"dimension": "Impact", "text": "I see tangible results from the effort I invest."},
-    {"dimension": "Impact", "text": "I believe my actions contribute positively to my community and/or organization."},
+    {"dimension": "Impact (Strengths)", "text": "The activities I spend my time on create meaningful value for others."},
+    {"dimension": "Impact (Strengths)", "text": "My contributions are recognized and appreciated by those around me."},
+    {"dimension": "Impact (Strengths)", "text": "I see tangible results from the effort I invest."},
+    {"dimension": "Impact (Strengths)", "text": "I believe my actions contribute positively to my community and/or organization."},
     
     # Well-being
-    {"dimension": "Well-being", "text": "I do not have to worry about paying my rent, utility and grocery bills."},
-    {"dimension": "Well-being", "text": "I regularly engage in high quality exercise, diet and sleep."},
-    {"dimension": "Well-being", "text": "Most days are reasonably free of stress and anxiety."},
-    {"dimension": "Well-being", "text": "I possess a reasonable number of strong, supportive personal and professional relationships."},
+    {"dimension": "Well-being (Needs)", "text": "I do not have to worry about paying my rent, utility and grocery bills."},
+    {"dimension": "Well-being (Needs)", "text": "I regularly engage in high quality exercise, diet and sleep."},
+    {"dimension": "Well-being (Needs)", "text": "Most days are reasonably free of stress and anxiety."},
+    {"dimension": "Well-being (Needs)", "text": "I possess a reasonable number of strong, supportive personal and professional relationships."},
 ]
 # Group questions by dimension for clean display
 dimension_questions = {}
 for q in questions:
-    if q['dimension'] not in dimension_questions:
-        dimension_questions[q['dimension']] = []
-    dimension_questions[q['dimension']].append(q['text'])
+    # Use the dimension name without the parenthetical for the dict key 
+    # but the full text for grouping the questions
+    key = q['dimension'].split(' ')[0] # e.g., "Purpose"
+    if key not in dimension_questions:
+        dimension_questions[key] = []
+    dimension_questions[key].append(q['text'])
 
 
 # --- THE FORM ---
@@ -155,24 +158,38 @@ if api_key:
         st.markdown("### Rating Scale")
         st.write(f"**1:** Strongly Disagree, **2:** Disagree, **3:** Neutral, **4:** Agree, **5:** Strongly Agree")
 
-        for dimension, q_list in dimension_questions.items():
-            # Survey Section Headers are now GOLD
-            st.markdown(f"<h2 style='color: {GOLD_COLOR};'>{dimension}</h2>", unsafe_allow_html=True)
+        # Define the map for displaying the full header text
+        header_map = {
+            "Purpose": "Purpose (Values)",
+            "Joy": "Joy (Interests)",
+            "Impact": "Impact (Strengths)",
+            "Well-being": "Well-being (Needs)",
+        }
+
+        for dimension_key, q_list in dimension_questions.items():
+            # Survey Section Headers are now GOLD with the VISN term
+            full_header_text = header_map[dimension_key]
+            st.markdown(f"<h2 style='color: {GOLD_COLOR};'>{full_header_text}</h2>", unsafe_allow_html=True)
+            
             for text in q_list:
-                key = f"Q{q_counter} ({dimension}): {text}"
+                # The question text already contains the full dimension name from the 'questions' list
+                key = f"Q{q_counter} ({text.split(' ')[0]}): {text}" # e.g. Q1 (Purpose): I spend my time...
                 st_key = f"radio_{q_counter}"
                 
-                # Combine question number and text into the radio label for tight grouping
-                question_label = f"**{q_counter}.** {text}"
+                # We use the text *after* the dimension name in the 'questions' list for the radio label
+                question_label = f"**{q_counter}.** {text.split(') ')[-1]}" if ')' in text else f"**{q_counter}.** {text}" 
                 
                 answer = st.radio(
-                    label=question_label,
+                    label=f"**{q_counter}.** {text}", # Display the full question text here
                     options=RATING_OPTIONS,
                     key=st_key,
                     index=None, 
                     horizontal=True,
                 )
-                user_answers[key] = answer
+                
+                # Store the answer using the short dimension name for the AI prompt to be simple
+                short_dimension = dimension_key
+                user_answers[f"Q{q_counter} ({short_dimension}): {text}"] = answer
                 q_counter += 1
                 
                 # ADD SPACE/DIVIDER AFTER EACH QUESTION/ANSWER 

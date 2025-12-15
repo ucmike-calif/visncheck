@@ -5,53 +5,64 @@ import os
 # --- GOLD COLOR CONSTANT ---
 GOLD_COLOR = "#CC9900" 
 
-# --- CSS INJECTION FOR STYLING ---
-# This CSS handles color contrast, centers the title, and styles headers.
+# --- CSS INJECTION FOR STYLING (FINALIZED COLORS AND READABILITY) ---
 st.markdown(f"""
 <style>
-/* 1. Ensure text is readable against the dark background theme */
-div.stRadio > label > div > div {{
-    color: var(--text-color); 
+/* 1. Ensure all text and internal elements are readable against the dark background. 
+   Set a minimum font size for general text (smallest text). */
+body, .stApp, .stText, .stMarkdown, .st-bh, .st-bb {{
+    font-size: 18px !important; 
 }}
 
 /* 2. Style the main title using HTML for centering and color */
 h1 {{
     text-align: center;
     color: {GOLD_COLOR}; /* Gold/Primary Color */
+    font-size: 48px;
 }}
 
-/* 3. Style dimension headers */
+/* 3. Style dimension headers (H2) to be Gold */
 h2 {{
     color: {GOLD_COLOR}; /* Gold/Primary Color */
+    font-size: 32px;
 }}
 
-/* 4. Style sub-headers (h3) */
+/* 4. Style sub-headers (H3) to be Gold */
 h3 {{
     color: {GOLD_COLOR}; /* Gold/Primary Color */
+    font-size: 24px;
 }}
-/* 5. Removed the complex, fragile CSS selector that targeted internal Streamlit 
-    dividers, which was likely causing the 'Error running app' on startup. */
+
+/* 5. Target standard Streamlit paragraph text (used for description, rating scale info, and post-report text) 
+   and enforce the larger font size for the second smallest text */
+div[data-testid="stMarkdownContainer"] p, div[data-testid="stText"] {{
+    font-size: 18px !important; 
+    line-height: 1.5;
+}}
+
+/* 6. Ensure text inside radio buttons uses the theme text color and is readable */
+div.stRadio > label > div > div {{
+    color: var(--text-color); 
+    font-size: 18px; /* Smallest text size made bigger */
+}}
+
+/* 7. Ensure the introductory paragraph text (which contains the colored words) is also readable */
+/* We target the div containing the introduction to ensure the size is applied */
+.stMarkdown > div:nth-child(2) p {{
+    font-size: 18px !important;
+}}
 </style>
 """, unsafe_allow_html=True)
 
 # --- CONFIGURATION ---
-# REMINDER: For the colors defined in [theme] below to work, 
-# you MUST have a file named 'compass-app/.streamlit/config.toml' in your GitHub repo 
-# containing the color definitions:
-# [theme]
-# primaryColor = "#CC9900" 
-# backgroundColor = "#800000"
-# secondaryBackgroundColor = "#A00000" 
-# textColor = "#FFFFFF" 
-# font = "sans serif"
 st.set_page_config(page_title="The Leader's Compass", page_icon="🧭")
 
 # --- APP TITLE & DESCRIPTION ---
-# Use custom HTML/Markdown for a centralized, branded title (already gold)
+# Title is forced gold by the h1 CSS rule AND the inline style
 st.markdown(f"<h1 style='text-align: center; color: {GOLD_COLOR};'>Free **VISN** Check!</h1>", unsafe_allow_html=True)
 st.markdown("## Want to live a life of Purpose, Joy, Impact and Well-being?")
 
-# UPDATED: Changed introductory paragraph to make the dimension words gold using HTML span styling
+# UPDATED: Using HTML span with inline style to force the GOLD color for the dimension names.
 st.markdown(f"""
 This FREE 16-question survey will help you identify misalignments with your **V**alues, **I**nterests, **S**trengths and **N**eeds and determine next steps to a better life! 
 The four key dimensions assessed are <span style='color: {GOLD_COLOR};'>**Purpose**</span>, <span style='color: {GOLD_COLOR};'>**Joy**</span>, <span style='color: {GOLD_COLOR};'>**Impact**</span>, and <span style='color: {GOLD_COLOR};'>**Well-being**</span>.
@@ -127,8 +138,7 @@ if api_key:
         st.write(f"**1:** Strongly Disagree, **2:** Disagree, **3:** Neutral, **4:** Agree, **5:** Strongly Agree")
 
         for dimension, q_list in dimension_questions.items():
-            # Dimension Headers (H2) will use the gold color due to H2 CSS styling
-            # This is already gold from your previous CSS configuration: h2 { color: #CC9900; }
+            # Dimension Headers (H2) are gold from the CSS
             st.markdown(f"## {dimension}")
             for text in q_list:
                 key = f"Q{q_counter} ({dimension}): {text}"

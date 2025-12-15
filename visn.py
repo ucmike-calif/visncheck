@@ -256,13 +256,13 @@ Present the output using Markdown in a professional format.
                 # START: CUSTOM INTRODUCTORY SECTION (H2 is gold)
                 st.markdown("## What is Your Compass Telling You?")
                 st.markdown("""
-                Your thoughtful responses have provided a snapshot of how you are currently experiencing your life. The following insights are designed to help you make conscious choices about the future you are designing.
+                Your thoughtful responses have provided a snapshot of how you are currently experiencing your life. The following insights are designed to help you make conscious choices about the life and future you are designing.
 
                 While there is no perfect, permanent “balance” of alignment between one’s values, interests, strengths, or needs (life’s just too messy for that), significant benefit can be gained from:
                 
                 1.  **Better understanding/appreciating** “where you are” (i.e., your current experience),
                 2.  **Reflecting** on how the current experience is working for you,
-                3.  **Choosing** whether to accept the current experience as it is (not just the good, but the bad and ugly that go along with it) or to use the compass to inform some choices for taking steps in a different direction that may create a different experience that works better for you.
+                3.  **Choosing** whether to accept the current experience as it is (the desirable AND undesirable aspects), or to use the compass to inform some choices for taking steps in a different direction that may work better for you.
                 """)
                 # END: CUSTOM INTRODUCTORY SECTION
                 
@@ -274,7 +274,7 @@ Present the output using Markdown in a professional format.
                     """
                     ### Ready to Choose Your Next Step?
                     
-                    The power lies in awareness and choice. Whether you decide to maintain your current path or explore a new Archetype, here are some resources designed to equip you with the **V.I.S.N.** framework to support your intentional life design.
+                    The power lies in awareness and choice. Whether you decide to maintain your current path for now or explore a new direction, here are some resources that can help you leverage the Leader's Compass to design and pursue a life of purpose, joy, impact and well-being!
                     
                     * **For Comprehensive Learning:** [Join an upcoming offering of our Course on the Leader's Compass!](https://plei.thinkific.com/courses/compass-coming-soon)
                     * **For Personalized Guidance:** [Explore 1-on-1 Coaching to accelerate your transformation.](https://www.ChangeYourFuture.net)

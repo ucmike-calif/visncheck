@@ -21,7 +21,9 @@ h1 {{
     font-size: 48px;
 }}
 
-/* 3. Style dimension headers (H2) to be Gold (Used in the Survey Section) */
+/* 3. Style dimension headers (H2) to be Gold (Used in the Survey Section) 
+   NOTE: While this CSS is correct, we will also use inline Markdown styling below 
+   to override potential Streamlit internal wrappers. */
 h2 {{
     color: {GOLD_COLOR}; /* Gold/Primary Color */
     font-size: 32px;
@@ -55,7 +57,7 @@ st.set_page_config(page_title="The Leader's Compass", page_icon="🧭")
 st.markdown(f"<h1 style='text-align: center; color: {GOLD_COLOR};'>Free **VISN** Check!</h1>", unsafe_allow_html=True)
 st.markdown("## Want to live a life of Purpose, Joy, Impact and Well-being?")
 
-# UPDATED: Changed introductory paragraph to make V.I.S.N. words gold using HTML span styling
+# V.I.S.N. words are gold
 st.markdown(f"""
 This FREE 16-question survey will help you identify misalignments with your <span style='color: {GOLD_COLOR};'>**V**alues</span>, <span style='color: {GOLD_COLOR};'>**I**nterests</span>, <span style='color: {GOLD_COLOR};'>**S**trengths</span> and <span style='color: {GOLD_COLOR};'>**N**eeds</span> and determine next steps to a better life! 
 """, unsafe_allow_html=True)
@@ -130,8 +132,8 @@ if api_key:
         st.write(f"**1:** Strongly Disagree, **2:** Disagree, **3:** Neutral, **4:** Agree, **5:** Strongly Agree")
 
         for dimension, q_list in dimension_questions.items():
-            # Dimension Headers (H2) are now guaranteed to be GOLD by the CSS rule #3
-            st.markdown(f"## {dimension}")
+            # FIX APPLIED HERE: Using inline HTML/style for the h2 to FORCE the GOLD color in the survey section
+            st.markdown(f"<h2 style='color: {GOLD_COLOR};'>{dimension}</h2>", unsafe_allow_html=True)
             for text in q_list:
                 key = f"Q{q_counter} ({dimension}): {text}"
                 st_key = f"radio_{q_counter}"

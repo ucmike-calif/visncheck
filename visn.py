@@ -4,10 +4,10 @@ import os
 
 # --- GOLD COLOR CONSTANT ---
 GOLD_COLOR = "#CC9900" 
-# --- DARK BURGUNDY BACKGROUND (FROM IMAGE) ---
+# --- DARK BURGUNDY BACKGROUND ---
 DARK_BG = "#420D09"
 
-# --- ARCHETYPE DEFINITIONS FOR AI REFERENCE ---
+# --- ARCHETYPE DEFINITIONS ---
 ARCHETYPES = """
 {
     'H H H H': 'The Harmonious Leader',
@@ -29,22 +29,27 @@ ARCHETYPES = """
 }
 """
 
-# --- CSS INJECTION FOR DARK THEME AND GOLD HEADERS ---
+# --- CSS INJECTION FOR THEME AND GOLD HEADER BAR ---
 st.markdown(f"""
 <style>
-/* 1. Set the dark burgundy background for the app */
+/* 1. Target the very top Streamlit Header bar and make it Gold */
+header[data-testid="stHeader"] {{
+    background-color: {GOLD_COLOR} !important;
+}}
+
+/* 2. Set the dark burgundy background for the main app area */
 .stApp {{
     background-color: {DARK_BG} !important;
 }}
 
-/* 2. Ensure all text is readable (White) against the dark background */
+/* 3. Ensure all text is readable (White) against the dark background */
 body, .stApp, .stText, .stMarkdown, p, li, label, div[data-testid="stMarkdownContainer"] p {{
     color: #FFFFFF !important;
     font-size: 18px !important; 
     line-height: 1.5;
 }}
 
-/* 3. Style the main title (BIGGER and GOLD) */
+/* 4. Style the main title (BIGGER and GOLD) */
 h1 {{
     text-align: center;
     color: {GOLD_COLOR} !important;
@@ -52,7 +57,7 @@ h1 {{
     font-weight: bold;
 }}
 
-/* 4. Style headers (H2 and H3) to be Gold */
+/* 5. Style headers (H2 and H3) to be Gold */
 h2 {{
     color: {GOLD_COLOR} !important;
     font-size: 32px !important;
@@ -63,18 +68,18 @@ h3 {{
     font-size: 24px !important;
 }}
 
-/* 5. Ensure radio buttons and labels are white and readable */
+/* 6. Ensure radio buttons and labels are white and readable */
 div.stRadio > label > div > div {{
     color: #FFFFFF !important; 
     font-size: 18px; 
 }}
 
-/* 6. Fix for Anchor Links */
+/* 7. Hide anchor link icons */
 .stApp a.anchor-link {{
     display: none !important;
 }}
 
-/* 7. Style the horizontal rule for better contrast */
+/* 8. Style horizontal rules */
 hr {{
     border: 0;
     height: 1px;
@@ -167,7 +172,7 @@ if api_key:
 
         for dimension_key, q_list in dimension_questions.items():
             full_header_text = header_map[dimension_key]
-            st.markdown(f"<h2 style='color: {GOLD_COLOR};'>{full_header_text}</h2>", unsafe_allow_html=True)
+            st.markdown(f"<h2>{full_header_text}</h2>", unsafe_allow_html=True)
             
             for text in q_list:
                 key = f"Q{q_counter} ({dimension_key}): {text}"

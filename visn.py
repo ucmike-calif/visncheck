@@ -215,7 +215,7 @@ Archetypes:
                 
                 1.  **Better understanding/appreciating** “where you are” (i.e., your current experience),
                 2.  **Reflecting** on how the current experience is working for you,
-                3.  **Choosing** whether to accept the current experience as it is or to use the compass to inform some choices for taking steps in a different direction.
+                3.  **Choosing** whether to accept the current experience as it is (the good AND the bad) or to use the compass to inform some choices for taking steps in a different direction.
                 """)
                 
                 st.write(response.text)

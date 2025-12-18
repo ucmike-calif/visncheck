@@ -209,7 +209,7 @@ Archetypes:
                 st.markdown("---")
                 st.markdown("## What is Your Compass Telling You?")
                 st.markdown(f"""
-                Your thoughtful responses have provided a snapshot of how you are currently experiencing your life. The following insights are designed to help you make conscious choices about the future you are designing.
+                Your thoughtful responses have provided a snapshot of how you are currently experiencing your life. The following insights are designed to help you make conscious choices about the life and future you are designing.
 
                 While there is no perfect, permanent “balance” of alignment between one’s values, interests, strengths, or needs (life’s just too messy for that), significant benefit can be gained from:
                 

@@ -190,18 +190,31 @@ if api_key:
             st.error("🚨 Please answer all 16 questions before submitting the assessment.")
             st.stop()
         
-        with st.spinner("Analyzing..."):
+        with st.spinner("Analyzing your compass..."):
             try:
-                answers_text = "\n".join([f"- {key.split(': ')[0]}: '{key.split(': ')[1]}' scored {RATING_SCALE[value]} ({value}/5)" for key, value in user_answers.items()])
+                answers_text = "\n".join([f"- {key}: {value}/5" for key, value in user_answers.items()])
                 
                 prompt = f"""
-Analyze the results. The user is leading their life.
-Answers:
+Analyze these results from the perspective of a wise, empathetic life coach.
+The scores represent how the person is currently leading their life.
+
+Scores:
 {answers_text}
-Archetypes:
+
+Archetypes for Reference:
 {ARCHETYPES}
-1. Narrative Profile (max 75 words) with '### Narrative Profile'.
-2. The Path to Choice (approx 100-120 words) with '### The Path to Choice'.
+
+RULES FOR NARRATIVE:
+- Refer to the person as "you" (never "the user").
+- Never show mathematical averages, scores, or "H/L" codes.
+- Do NOT say "You are a [Archetype Name]." 
+- Instead, say: "Based on your answers, your current experience resembles the archetype of [Archetype Name]."
+- Keep the Narrative Profile under 75 words.
+- Provide a 'Path to Choice' (100-120 words) focused on intentionality.
+
+Structure the output with:
+### Narrative Profile
+### The Path to Choice
 """
                 model = genai.GenerativeModel('gemini-2.5-flash')
                 response = model.generate_content(prompt)
@@ -209,13 +222,7 @@ Archetypes:
                 st.markdown("---")
                 st.markdown("## What is Your Compass Telling You?")
                 st.markdown(f"""
-                Your thoughtful responses have provided a snapshot of how you are currently experiencing your life. The following insights are designed to help you make conscious choices about the life and future you are designing.
-
-                While there is no perfect, permanent “balance” of alignment between one’s values, interests, strengths, or needs (life’s just too messy for that), significant benefit can be gained from:
-                
-                1.  **Better understanding/appreciating** “where you are” (i.e., your current experience),
-                2.  **Reflecting** on how the current experience is working for you,
-                3.  **Choosing** whether to accept the current experience as it is (the good AND the bad) or to use the compass to inform some choices for taking steps in a different direction.
+                Your thoughtful responses have provided a snapshot of how you are currently experiencing your life. The following insights are designed to help you make conscious choices about the future you are designing.
                 """)
                 
                 st.write(response.text)

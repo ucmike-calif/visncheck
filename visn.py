@@ -29,7 +29,7 @@ ARCHETYPES = """
 }
 """
 
-# --- CSS INJECTION FOR THEME AND GOLD HEADER BAR ---
+# --- CSS INJECTION FOR THEME, GOLD HEADER, AND GOLD RADIO BUTTONS ---
 st.markdown(f"""
 <style>
 /* 1. Target the very top Streamlit Header bar and make it Gold */
@@ -42,7 +42,7 @@ header[data-testid="stHeader"] {{
     background-color: {DARK_BG} !important;
 }}
 
-/* 3. Ensure all text is readable (White) against the dark background */
+/* 3. Ensure all text is white against the dark background */
 body, .stApp, .stText, .stMarkdown, p, li, label, div[data-testid="stMarkdownContainer"] p {{
     color: #FFFFFF !important;
     font-size: 18px !important; 
@@ -68,18 +68,29 @@ h3 {{
     font-size: 24px !important;
 }}
 
-/* 6. Ensure radio buttons and labels are white and readable */
+/* 6. STYLE THE RADIO BUTTON CIRCLES (GOLD) */
+/* This targets the outer ring of the radio button */
+div[data-testid="stRadio"] div[role="radiogroup"] label > div:first-child {{
+    border-color: {GOLD_COLOR} !important;
+}}
+
+/* This targets the inner dot when selected */
+div[data-testid="stRadio"] div[role="radiogroup"] label > div:first-child > div {{
+    background-color: {GOLD_COLOR} !important;
+}}
+
+/* 7. Ensure radio labels are white */
 div.stRadio > label > div > div {{
     color: #FFFFFF !important; 
     font-size: 18px; 
 }}
 
-/* 7. Hide anchor link icons */
+/* 8. Hide anchor link icons */
 .stApp a.anchor-link {{
     display: none !important;
 }}
 
-/* 8. Style horizontal rules */
+/* 9. Style horizontal rules */
 hr {{
     border: 0;
     height: 1px;

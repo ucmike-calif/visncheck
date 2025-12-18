@@ -31,25 +31,18 @@ ARCHETYPES = """
 }
 """
 
-# --- CSS INJECTION ---
+# --- CSS INJECTION (Clean background, no white boxes) ---
 st.markdown(f"""
 <style>
-/* 1. Transparent Header & Maroon Background */
-header[data-testid="stHeader"] {{
-    background-color: transparent !important;
-}}
-.stApp {{
-    background-color: {DARK_MAROON} !important;
-}}
+header[data-testid="stHeader"] {{ background-color: transparent !important; }}
+.stApp {{ background-color: {DARK_MAROON} !important; }}
 
-/* 2. ULTIMATE TRANSPARENCY - Targets the specific containers causing white bars */
 div[data-testid="stVerticalBlock"] > div,
 div[data-testid="stMarkdownContainer"],
 div[data-testid="stRadio"],
 label[data-testid="stWidgetLabel"],
 div[role="radiogroup"],
 div[data-testid="stForm"],
-div[data-testid="stChatMessageContainer"],
 div.element-container {{
     background-color: transparent !important;
     background: transparent !important;
@@ -57,30 +50,15 @@ div.element-container {{
     box-shadow: none !important;
 }}
 
-/* 3. Global Text (White) */
-body, .stApp, p, li, label, span, .stMarkdown {{
-    color: #FFFFFF !important;
-    font-size: 18px !important; 
-}}
-
-/* 4. Headers (Gold) */
+body, .stApp, p, li, label, span, .stMarkdown {{ color: #FFFFFF !important; font-size: 18px !important; }}
 h1 {{ text-align: center; color: {GOLD_COLOR} !important; font-size: 50px !important; font-weight: bold; }}
 h2 {{ color: {GOLD_COLOR} !important; font-size: 28px !important; margin-top: 30px !important; }}
 h3 {{ color: {GOLD_COLOR} !important; font-size: 22px !important; }}
 
-/* 5. RADIO BUTTONS: Hollow White -> Solid Gold */
-div[role="radiogroup"] label > div:first-child {{
-    border: 2px solid #FFFFFF !important;
-    background-color: transparent !important;
-}}
-div[role="radiogroup"] label[aria-checked="true"] > div:first-child {{
-    border-color: {GOLD_COLOR} !important;
-}}
-div[role="radiogroup"] label[aria-checked="true"] > div:first-child > div {{
-    background-color: {GOLD_COLOR} !important;
-}}
+div[role="radiogroup"] label > div:first-child {{ border: 2px solid #FFFFFF !important; background-color: transparent !important; }}
+div[role="radiogroup"] label[aria-checked="true"] > div:first-child {{ border-color: {GOLD_COLOR} !important; }}
+div[role="radiogroup"] label[aria-checked="true"] > div:first-child > div {{ background-color: {GOLD_COLOR} !important; }}
 
-/* 6. UI Polish */
 hr {{ border: 0; height: 1px; background: #555; margin: 25px 0; }}
 button[kind="primaryFormSubmit"] {{
     background-color: {GOLD_COLOR} !important;
@@ -101,7 +79,7 @@ api_key = os.getenv("GEMINI_API_KEY")
 if not api_key:
     api_key = st.sidebar.text_input("Enter Google Gemini API Key", type="password")
 
-# --- ASSESSMENT FORM ---
+# --- QUESTIONS ---
 RATING_OPTIONS = ["1", "2", "3", "4", "5"]
 dimensions = {
     "Purpose": [
@@ -137,24 +115,14 @@ if api_key:
     genai.configure(api_key=api_key)
     
     with st.form("assessment_form"):
-        st.markdown("### Rating Scale")
-        st.write("**1:** Strongly Disagree, **2:** Disagree, **3:** Neutral, **4:** Agree, **5:** Strongly Agree")
-
+        st.write("**1:** Strongly Disagree ... **5:** Strongly Agree")
         for dim, qs in dimensions.items():
             st.markdown(f"<h2>{dim}</h2>", unsafe_allow_html=True)
             for q_text in qs:
-                st_key = f"radio_{q_counter}"
-                answer = st.radio(
-                    label=f"{q_counter}. {q_text}",
-                    options=RATING_OPTIONS,
-                    key=st_key,
-                    index=None, 
-                    horizontal=True,
-                )
+                answer = st.radio(label=f"{q_counter}. {q_text}", options=RATING_OPTIONS, key=f"radio_{q_counter}", index=None, horizontal=True)
                 user_answers[f"Q{q_counter} ({dim})"] = answer
                 q_counter += 1
                 st.markdown("---")
-        
         submitted = st.form_submit_button("Submit Assessment and Generate Report")
 
     if submitted:
@@ -163,17 +131,20 @@ if api_key:
         else:
             with st.spinner("Analyzing your results..."):
                 try:
-                    # UPDATED TO MODEL VERSION 2.5
-                    model = genai.GenerativeModel('gemini-2.5-flash') 
+                    # UPDATED TO STABLE 2.0 VERSION
+                    model = genai.GenerativeModel('gemini-2.0-flash') 
                     
+                    # STRENGTHENED PROMPT TO REMOVE CALCULATIONS
                     prompt = f"""
-                    Analyze these results based on the Leader's Compass.
-                    Scores: {user_answers}
+                    You are a professional executive coach. Analyze these VISN results: {user_answers}
                     Archetypes: {ARCHETYPES}
                     
-                    Return two sections:
-                    1. ### Narrative Profile (confirm the Archetype name).
-                    2. ### The Path to Choice (reflective advice).
+                    INSTRUCTIONS:
+                    - Do NOT show the math, average scores, or threshold logic.
+                    - Do NOT mention "thresholds of 3" or show patterns like "H L H H".
+                    - Start immediately with the Archetype Name as a heading.
+                    - Provide a 'Narrative Profile' that feels personal and insightful.
+                    - End with 'The Path to Choice' offering 2-3 reflective steps.
                     """
                     response = model.generate_content(prompt)
                     st.markdown("---")

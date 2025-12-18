@@ -2,9 +2,9 @@ import streamlit as st
 import google.generativeai as genai
 import os 
 
-# --- GOLD COLOR CONSTANT ---
+# --- COLOR CONSTANTS ---
 GOLD_COLOR = "#CC9900" 
-DARK_MAROON = "#3B0909"
+DARK_MAROON = "#3B0909" # Updated to match your image color
 
 # --- ARCHETYPE DEFINITIONS FOR AI REFERENCE ---
 ARCHETYPES = """
@@ -73,12 +73,14 @@ div.stRadio > label > div > div {{
     font-size: 18px; 
 }}
 
-/* 6. GOLD BUTTONS WITH MAROON TEXT */
+/* 6. GOLD BUTTONS WITH DARK MAROON TEXT (Submit and Retake) */
 div.stButton > button, div[data-testid="stForm"] button {{
     background-color: {GOLD_COLOR} !important;
     color: {DARK_MAROON} !important;
     border: none !important;
     font-weight: bold !important;
+    font-size: 20px !important;
+    padding: 10px 24px !important;
 }}
 
 /* Anchor link hide */
@@ -146,7 +148,6 @@ for q in questions:
     if key not in dimension_questions:
         dimension_questions[key] = []
     dimension_questions[key].append(q['text'])
-
 
 # --- THE FORM ---
 user_answers = {}

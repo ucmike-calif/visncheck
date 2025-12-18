@@ -31,7 +31,7 @@ ARCHETYPES = """
 }
 """
 
-# --- CSS INJECTION (The "Nuclear Option" for white bars) ---
+# --- CSS INJECTION ---
 st.markdown(f"""
 <style>
 /* 1. Transparent Header & Maroon Background */
@@ -42,12 +42,11 @@ header[data-testid="stHeader"] {{
     background-color: {DARK_MAROON} !important;
 }}
 
-/* 2. COMPLETELY REMOVE WHITE BARS */
-/* This targets every possible container level to force transparency */
+/* 2. FORCED TRANSPARENCY - Removes white bars */
 div[data-testid="stVerticalBlock"],
 div[data-testid="stMarkdownContainer"],
 div[data-testid="stRadio"],
-div[data-testid="stWidgetLabel"],
+label[data-testid="stWidgetLabel"],
 div[role="radiogroup"],
 div[data-testid="stForm"] {{
     background-color: transparent !important;
@@ -57,9 +56,9 @@ div[data-testid="stForm"] {{
 }}
 
 /* 3. Global Text (White) */
-body, .stApp, p, li, label, span, div {{
+body, .stApp, p, li, label, span {{
     color: #FFFFFF !important;
-    font-size: 18px !important;
+    font-size: 18px !important; 
 }}
 
 /* 4. Headers (Gold) */
@@ -67,13 +66,11 @@ h1 {{ text-align: center; color: {GOLD_COLOR} !important; font-size: 50px !impor
 h2 {{ color: {GOLD_COLOR} !important; font-size: 28px !important; margin-top: 30px !important; }}
 h3 {{ color: {GOLD_COLOR} !important; font-size: 22px !important; }}
 
-/* 5. RADIO BUTTONS: Hollow White Rings */
+/* 5. RADIO BUTTONS: Hollow White -> Solid Gold */
 div[role="radiogroup"] label > div:first-child {{
     border: 2px solid #FFFFFF !important;
     background-color: transparent !important;
 }}
-
-/* Radio Selected State (Gold) */
 div[role="radiogroup"] label[aria-checked="true"] > div:first-child {{
     border-color: {GOLD_COLOR} !important;
 }}
@@ -81,21 +78,18 @@ div[role="radiogroup"] label[aria-checked="true"] > div:first-child > div {{
     background-color: {GOLD_COLOR} !important;
 }}
 
-/* 6. Form/UI Cleanup */
+/* 6. UI Polish */
 hr {{ border: 0; height: 1px; background: #555; margin: 25px 0; }}
-
-/* Style Submit Button */
 button[kind="primaryFormSubmit"] {{
     background-color: {GOLD_COLOR} !important;
     color: #FFFFFF !important;
     font-weight: bold !important;
-    border: none !important;
     width: 100%;
 }}
 </style>
 """, unsafe_allow_html=True)
 
-# --- APP CONTENT ---
+# --- INTRO ---
 st.markdown("<h1>Free VISN Check!</h1>", unsafe_allow_html=True)
 st.markdown("### Are You **Intentionally Leading** Yourself to a life of Purpose, Joy, Impact and Well-being?")
 
@@ -104,7 +98,7 @@ api_key = os.getenv("GEMINI_API_KEY")
 if not api_key:
     api_key = st.sidebar.text_input("Enter Google Gemini API Key", type="password")
 
-# --- ASSESSMENT FORM ---
+# --- QUESTIONS ---
 RATING_OPTIONS = ["1", "2", "3", "4", "5"]
 dimensions = {
     "Purpose": [
@@ -164,23 +158,16 @@ if api_key:
         if any(answer is None for answer in user_answers.values()):
             st.error("🚨 Please answer all 16 questions.")
         else:
-            with st.spinner("Analyzing your results..."):
+            with st.spinner("Analyzing..."):
                 try:
-                    # UPDATED TO THE MOST CURRENT MODEL NAME
-                    model = genai.GenerativeModel('gemini-1.5-flash-latest') 
+                    # REVERTED TO THE ORIGINAL WORKING MODEL STRING
+                    model = genai.GenerativeModel('gemini-1.5-flash') 
                     
-                    prompt = f"""
-                    Analyze these results based on the Leader's Compass.
-                    Scores: {user_answers}
-                    Archetypes: {ARCHETYPES}
-                    
-                    Return two sections:
-                    1. ### Narrative Profile (confirm the Archetype name).
-                    2. ### The Path to Choice (reflective advice).
-                    """
+                    prompt = f"Analyze results: {user_answers}\nArchetypes: {ARCHETYPES}\nOutput: Narrative Profile and Path to Choice."
                     response = model.generate_content(prompt)
+                    
                     st.markdown("---")
                     st.markdown("## What is Your Compass Telling You?")
-                    st.markdown(response.text)
+                    st.write(response.text)
                 except Exception as e:
-                    st.error(f"Analysis Error: {e}. If this persists, please double-check your API key permissions.")
+                    st.error(f"Analysis Error: {e}")

@@ -42,13 +42,15 @@ header[data-testid="stHeader"] {{
     background-color: {DARK_MAROON} !important;
 }}
 
-/* 2. FORCED TRANSPARENCY - Removes white bars */
-div[data-testid="stVerticalBlock"],
+/* 2. ULTIMATE TRANSPARENCY - Targets the specific containers causing white bars */
+div[data-testid="stVerticalBlock"] > div,
 div[data-testid="stMarkdownContainer"],
 div[data-testid="stRadio"],
 label[data-testid="stWidgetLabel"],
 div[role="radiogroup"],
-div[data-testid="stForm"] {{
+div[data-testid="stForm"],
+div[data-testid="stChatMessageContainer"],
+div.element-container {{
     background-color: transparent !important;
     background: transparent !important;
     border: none !important;
@@ -56,7 +58,7 @@ div[data-testid="stForm"] {{
 }}
 
 /* 3. Global Text (White) */
-body, .stApp, p, li, label, span {{
+body, .stApp, p, li, label, span, .stMarkdown {{
     color: #FFFFFF !important;
     font-size: 18px !important; 
 }}
@@ -85,11 +87,12 @@ button[kind="primaryFormSubmit"] {{
     color: #FFFFFF !important;
     font-weight: bold !important;
     width: 100%;
+    border: none !important;
 }}
 </style>
 """, unsafe_allow_html=True)
 
-# --- INTRO ---
+# --- APP CONTENT ---
 st.markdown("<h1>Free VISN Check!</h1>", unsafe_allow_html=True)
 st.markdown("### Are You **Intentionally Leading** Yourself to a life of Purpose, Joy, Impact and Well-being?")
 
@@ -98,7 +101,7 @@ api_key = os.getenv("GEMINI_API_KEY")
 if not api_key:
     api_key = st.sidebar.text_input("Enter Google Gemini API Key", type="password")
 
-# --- QUESTIONS ---
+# --- ASSESSMENT FORM ---
 RATING_OPTIONS = ["1", "2", "3", "4", "5"]
 dimensions = {
     "Purpose": [
@@ -158,16 +161,23 @@ if api_key:
         if any(answer is None for answer in user_answers.values()):
             st.error("🚨 Please answer all 16 questions.")
         else:
-            with st.spinner("Analyzing..."):
+            with st.spinner("Analyzing your results..."):
                 try:
-                    # REVERTED TO THE ORIGINAL WORKING MODEL STRING
-                    model = genai.GenerativeModel('gemini-1.5-flash') 
+                    # UPDATED TO MODEL VERSION 2.5
+                    model = genai.GenerativeModel('gemini-2.5-flash') 
                     
-                    prompt = f"Analyze results: {user_answers}\nArchetypes: {ARCHETYPES}\nOutput: Narrative Profile and Path to Choice."
+                    prompt = f"""
+                    Analyze these results based on the Leader's Compass.
+                    Scores: {user_answers}
+                    Archetypes: {ARCHETYPES}
+                    
+                    Return two sections:
+                    1. ### Narrative Profile (confirm the Archetype name).
+                    2. ### The Path to Choice (reflective advice).
+                    """
                     response = model.generate_content(prompt)
-                    
                     st.markdown("---")
                     st.markdown("## What is Your Compass Telling You?")
-                    st.write(response.text)
+                    st.markdown(response.text)
                 except Exception as e:
                     st.error(f"Analysis Error: {e}")

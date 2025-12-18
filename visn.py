@@ -4,7 +4,7 @@ import os
 
 # --- COLOR CONSTANTS ---
 GOLD_COLOR = "#CC9900" 
-DARK_MAROON = "#3B0909" # Updated to match your image color
+DARK_MAROON = "#781E1E" # Updated to match your image color
 
 # --- ARCHETYPE DEFINITIONS FOR AI REFERENCE ---
 ARCHETYPES = """

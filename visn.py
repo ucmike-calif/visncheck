@@ -2,14 +2,12 @@ import streamlit as st
 import google.generativeai as genai
 import os 
 
-# --- CONFIGURATION ---
-st.set_page_config(page_title="The Leader's Compass", page_icon="🧭")
-
-# --- CONSTANTS ---
+# --- GOLD COLOR CONSTANT ---
 GOLD_COLOR = "#CC9900" 
-DARK_MAROON = "#3B0909" 
 
-# --- ARCHETYPE DEFINITIONS ---
+# --- ARCHETYPE DEFINITIONS FOR AI REFERENCE ---
+# P=Purpose, J=Joy, I=Impact, W=Well-being. H=High, L=Low. Threshold for H is 3.5.
+# REDEFINED using single quotes for robust insertion into the main prompt's f-string
 ARCHETYPES = """
 {
     'H H H H': 'The Harmonious Leader',
@@ -31,155 +29,263 @@ ARCHETYPES = """
 }
 """
 
-# --- CSS INJECTION ---
+# --- CSS INJECTION FOR STYLING (FINALIZED COLORS AND READABILITY) ---
 st.markdown(f"""
 <style>
-/* 1. Transparent Header & Maroon Background */
-header[data-testid="stHeader"] {{
-    background-color: transparent !important;
-}}
-.stApp {{
-    background-color: {DARK_MAROON} !important;
+/* 1. Ensure all text and internal elements are readable against the dark background. 
+   Set a minimum font size for general text (smallest text). */
+body, .stApp, .stText, .stMarkdown, .st-bh, .st-bb {{
+    font-size: 18px !important; 
 }}
 
-/* 2. ULTIMATE TRANSPARENCY - Removes white bars */
-div[data-testid="stVerticalBlock"] > div,
-div[data-testid="stMarkdownContainer"],
-div[data-testid="stRadio"],
-label[data-testid="stWidgetLabel"],
-div[role="radiogroup"],
-div[data-testid="stForm"],
-div.element-container {{
-    background-color: transparent !important;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
+/* 2. Style the main title using HTML for centering and color (MADE BIGGER) */
+h1 {{
+    text-align: center;
+    color: {GOLD_COLOR}; /* Gold/Primary Color */
+    font-size: 60px; /* INCREASED SIZE */
 }}
 
-/* 3. Question Text Size (Increased to 24px) */
-body, .stApp, p, li, label, span, .stMarkdown {{
-    color: #FFFFFF !important;
-    font-size: 24px !important; 
+/* 3. Style dimension headers (H2) and report headers (H2) to be Gold */
+h2 {{
+    color: {GOLD_COLOR}; /* Gold/Primary Color */
+    font-size: 32px;
 }}
 
-/* 4. Headers (Gold) */
-h1 {{ text-align: center; color: {GOLD_COLOR} !important; font-size: 50px !important; font-weight: bold; }}
-h2 {{ color: {GOLD_COLOR} !important; font-size: 32px !important; margin-top: 30px !important; }}
-h3 {{ color: {GOLD_COLOR} !important; font-size: 26px !important; }}
-
-/* 5. RADIO BUTTONS: Hollow White -> Solid Gold */
-div[role="radiogroup"] label > div:first-child {{
-    border: 2px solid #FFFFFF !important;
-    background-color: transparent !important;
-}}
-div[role="radiogroup"] label[aria-checked="true"] > div:first-child {{
-    border-color: {GOLD_COLOR} !important;
-}}
-div[role="radiogroup"] label[aria-checked="true"] > div:first-child > div {{
-    background-color: {GOLD_COLOR} !important;
+/* 4. Style sub-headers (H3) and report section headers (H3) to be Gold (ENFORCING COLOR) */
+h3 {{
+    color: {GOLD_COLOR} !important; /* Gold/Primary Color (Using !important to override Streamlit internal styling) */
+    font-size: 24px;
 }}
 
-/* 6. UI Polish */
-hr {{ border: 0; height: 1px; background: #555; margin: 25px 0; }}
-button[kind="primaryFormSubmit"] {{
-    background-color: {GOLD_COLOR} !important;
-    color: #FFFFFF !important;
-    font-weight: bold !important;
-    width: 100%;
-    border: none !important;
-    font-size: 20px !important;
+/* 5. Target standard Streamlit paragraph text and enforce the larger font size */
+div[data-testid="stMarkdownContainer"] p, div[data-testid="stText"] {{
+    font-size: 18px !important; 
+    line-height: 1.5;
 }}
+
+/* 6. Ensure text inside radio buttons uses the theme text color and is readable */
+div.stRadio > label > div > div {{
+    color: var(--text-color); 
+    font-size: 18px; 
+}}
+
+/* FIX for Anchor Links: Explicitly hide the hyperlink icons next to headers */
+.stApp a.anchor-link {{
+    display: none !important;
+}}
+
 </style>
 """, unsafe_allow_html=True)
 
-# --- APP CONTENT ---
-st.markdown("<h1>Free VISN Check!</h1>", unsafe_allow_html=True)
-st.markdown("### Are You **Intentionally Leading** Yourself to a life of Purpose, Joy, Impact and Well-being?")
+# --- CONFIGURATION ---
+st.set_page_config(page_title="The Leader's Compass", page_icon="🧭")
 
-# --- API KEY ---
+# --- APP TITLE & DESCRIPTION ---
+# Title is gold
+st.markdown(f"<h1 style='text-align: center; color: {GOLD_COLOR};'>Free VISN Check!</h1>", unsafe_allow_html=True)
+# Updated to focus on the verb "leading"
+st.markdown("## Are You **Intentionally Leading** Yourself to a life of Purpose, Joy, Impact and Well-being?")
+
+# V.I.S.N. words are gold, BOLDING IS REMOVED FROM VISN IN THE H1.
+# Updated to "The Leader's Compass" and removed ** around VISN
+st.markdown(f"""
+This FREE 16-question survey uses the four points of The Leader's Compass—<span style='color: {GOLD_COLOR};'>**V**alues</span>, <span style='color: {GOLD_COLOR};'>**I**nterests</span>, <span style='color: {GOLD_COLOR};'>**S**trengths</span> and <span style='color: {GOLD_COLOR};'>**N**eeds</span>—to help you figure out where you are and decide where you want to go by taking ownership of your choices and future.
+""", unsafe_allow_html=True)
+
+# --- API KEY SETUP ---
+# 1. First, try to get the API key from Streamlit Cloud Secrets (GEMINI_API_KEY)
 api_key = os.getenv("GEMINI_API_KEY")
+
+# 2. If the secret isn't set, then display the sidebar input (for local testing)
 if not api_key:
-    api_key = st.sidebar.text_input("Enter Google Gemini API Key", type="password")
+    with st.sidebar:
+        st.warning("Running locally? Please enter your API Key below.")
+        api_key = st.text_input("Enter Google Gemini API Key", type="password")
+        st.markdown("[Get a free Gemini API key here](https://aistudio.google.com/app/apikey)")
 
-# --- ASSESSMENT FORM ---
-RATING_OPTIONS = ["1", "2", "3", "4", "5"]
-dimensions = {
-    "Purpose": [
-        "I spend my time contributing to something which gives me a sense of meaning and purpose.",
-        "My daily activities align with my deeper values and aspirations.",
-        "I wake up most days with a sense of motivation and intentionality.",
-        "I feel connected to something larger than myself."
-    ],
-    "Joy": [
-        "There are many things in my life that I look forward to doing in the coming days/weeks.",
-        "Most of the activities I spend my time on energize me.",
-        "I make time for activities and relationships that bring me pleasure.",
-        "I am able to experience and express genuine happiness and delight."
-    ],
-    "Impact": [
-        "The activities I spend my time on create meaningful value for others.",
-        "My contributions are recognized and appreciated by those around me.",
-        "I see tangible results from the effort I invest.",
-        "I believe my actions contribute positively to my community and/or organization."
-    ],
-    "Well-being": [
-        "I do not have to worry about paying my rent, utility and grocery bills.",
-        "I regularly engage in high quality exercise, diet and sleep.",
-        "Most days are reasonably free of stress and anxiety.",
-        "I possess a reasonable number of strong, supportive personal and professional relationships."
-    ]
+# --- FIX for NameError: Initialize submitted outside of the API key check ---
+submitted = False
+
+# --- RATING SCALE ---
+RATING_SCALE = {
+    "1": "1:Strongly Disagree",
+    "2": "2:Disagree",
+    "3": "3:Neutral",
+    "4": "4:Agree",
+    "5": "5:Strongly Agree"
 }
+RATING_OPTIONS = list(RATING_SCALE.keys())
 
+# --- THE QUESTIONS ---
+questions = [
+    # Purpose
+    {"dimension": "Purpose (Values)", "text": "I spend my time contributing to something which gives me a sense of meaning and purpose."},
+    {"dimension": "Purpose (Values)", "text": "My daily activities align with my deeper values and aspirations."},
+    {"dimension": "Purpose (Values)", "text": "I wake up most days with a sense of motivation and intentionality."},
+    {"dimension": "Purpose (Values)", "text": "I feel connected to something larger than myself."},
+
+    # Joy
+    {"dimension": "Joy (Interests)", "text": "There are many things in my life that I look forward to doing in the coming days/weeks."},
+    {"dimension": "Joy (Interests)", "text": "Most of the activities I spend my time on energize me."},
+    {"dimension": "Joy (Interests)", "text": "I make time for activities and relationships that bring me pleasure."},
+    {"dimension": "Joy (Interests)", "text": "I am able to experience and express genuine happiness and delight."},
+    
+    # Impact
+    {"dimension": "Impact (Strengths)", "text": "The activities I spend my time on create meaningful value for others."},
+    {"dimension": "Impact (Strengths)", "text": "My contributions are recognized and appreciated by those around me."},
+    {"dimension": "Impact (Strengths)", "text": "I see tangible results from the effort I invest."},
+    {"dimension": "Impact (Strengths)", "text": "I believe my actions contribute positively to my community and/or organization."},
+    
+    # Well-being
+    {"dimension": "Well-being (Needs)", "text": "I do not have to worry about paying my rent, utility and grocery bills."},
+    {"dimension": "Well-being (Needs)", "text": "I regularly engage in high quality exercise, diet and sleep."},
+    {"dimension": "Well-being (Needs)", "text": "Most days are reasonably free of stress and anxiety."},
+    {"dimension": "Well-being (Needs)", "text": "I possess a reasonable number of strong, supportive personal and professional relationships."},
+]
+# Group questions by dimension for clean display
+dimension_questions = {}
+for q in questions:
+    # Use the dimension name without the parenthetical for the dict key 
+    key = q['dimension'].split(' ')[0] # e.g., "Purpose"
+    if key not in dimension_questions:
+        dimension_questions[key] = []
+    dimension_questions[key].append(q['text'])
+
+
+# --- THE FORM ---
 user_answers = {}
 q_counter = 1
 
+# Only configure the API if the key exists
 if api_key:
+    # Use the appropriate configuration for the legacy structure
     genai.configure(api_key=api_key)
     
     with st.form("assessment_form"):
+        # Display Rating Scale clearly at the top
         st.markdown("### Rating Scale")
-        st.write("**1:** Strongly Disagree, **2:** Disagree, **3:** Neutral, **4:** Agree, **5:** Strongly Agree")
+        st.write(f"**1:** Strongly Disagree, **2:** Disagree, **3:** Neutral, **4:** Agree, **5:** Strongly Agree")
 
-        for dim, qs in dimensions.items():
-            st.markdown(f"<h2>{dim}</h2>", unsafe_allow_html=True)
-            for q_text in qs:
+        # Define the map for displaying the full header text
+        header_map = {
+            "Purpose": "Purpose (Values)",
+            "Joy": "Joy (Interests)",
+            "Impact": "Impact (Strengths)",
+            "Well-being": "Well-being (Needs)",
+        }
+
+        for dimension_key, q_list in dimension_questions.items():
+            # Survey Section Headers are now GOLD with the VISN term
+            full_header_text = header_map[dimension_key]
+            st.markdown(f"<h2 style='color: {GOLD_COLOR};'>{full_header_text}</h2>", unsafe_allow_html=True)
+            
+            for text in q_list:
+                # The question text already contains the full dimension name from the 'questions' list
+                key = f"Q{q_counter} ({dimension_key}): {text}" # e.g. Q1 (Purpose): I spend my time...
                 st_key = f"radio_{q_counter}"
+                
                 answer = st.radio(
-                    label=f"{q_counter}. {q_text}",
+                    label=f"**{q_counter}.** {text.split(') ')[-1]}", # Display the question text without the parenthetical
                     options=RATING_OPTIONS,
                     key=st_key,
                     index=None, 
                     horizontal=True,
                 )
-                user_answers[f"Q{q_counter} ({dim})"] = answer
+                
+                # Store the answer using the short dimension name for the AI prompt to be simple
+                user_answers[f"Q{q_counter} ({dimension_key}): {text.split(') ')[-1]}"] = answer
                 q_counter += 1
+                
+                # ADD SPACE/DIVIDER AFTER EACH QUESTION/ANSWER 
                 st.markdown("---")
         
+        # The default st.form separator is outside the loop
         submitted = st.form_submit_button("Submit Assessment and Generate Report")
 
+    # --- AI GENERATION ---
     if submitted:
+        
+        # --- VALIDATION CHECK FOR UNANSWERED QUESTIONS ---
         if any(answer is None for answer in user_answers.values()):
-            st.error("🚨 Please answer all 16 questions.")
-        else:
-            with st.spinner("Analyzing your results..."):
-                try:
-                    # REVERTED TO VERSION 2.5
-                    model = genai.GenerativeModel('gemini-2.5-flash') 
-                    
-                    prompt = f"""
-                    Analyze these results based on the Leader's Compass. 
-                    Scores: {user_answers}
-                    Archetypes: {ARCHETYPES}
-                    
-                    CRITICAL INSTRUCTION:
-                    - Do NOT show average score calculations, math formulas, or threshold patterns (e.g., avoid "H L H H" or "(4+5)/2").
-                    - Start directly with the 'Archetype Name' as a header.
-                    - Provide a professional 'Narrative Profile'.
-                    - Provide 'The Path to Choice' with reflective advice.
+            st.error("🚨 Please answer all 16 questions before submitting the assessment.")
+            st.stop()
+        # --- END VALIDATION CHECK ---
+        
+        with st.spinner("Analyzing your answers and generating your Personalized Insights..."):
+            try:
+                # 1. Construct the Prompt for the LLM
+                
+                answers_text = "\n".join([f"- {key.split(': ')[0]}: '{key.split(': ')[1]}' scored {RATING_SCALE[value]} ({value}/5)" for key, value in user_answers.items()])
+                
+                prompt = f"""
+Analyze "The Leader's Compass" assessment results. **Crucially, the concept of 'Leader' here refers to how the user is intentionally leading their life and designing their future, NOT corporate or professional leadership.**
+
+The user has completed the assessment using a 1-5 scale (1=Strongly Disagree, 5=Strongly Agree). The questions are categorized into four dimensions: Purpose (P), Joy (J), Impact (I), and Well-being (W).
+
+Here are the user's answers:
+
+{answers_text}
+
+Here are the Archetype definitions. Use a threshold of 3.5 to determine if a dimension score is High (H) or Low (L). The average score across the four questions in each dimension determines the H/L code.
+
+ARCHETYPES:
+{ARCHETYPES}
+
+Your Task is to generate the "Personalized Insights" report with the following, client-centered structure.
+
+1. **Calculate and Identify:** Calculate the average score for each dimension (P, J, I, W) and determine the H/L code to identify the user's Archetype name. **Do NOT print this calculation or the Archetype Code/Name in the final output.**
+2. **Narrative Profile:** Write a 'Narrative Profile' (**max 75 words**) that confirms the identified Archetype name within the first sentence, speaks empathetically to their current strengths and challenges (the H's and L's), and clearly defines their current position. The header for this must be '### Narrative Profile'.
+3. **The Path to Choice:** Write a compelling reflection section (**approx 100-120 words**) that guides the user toward conscious choice using the following logic. The header for this must be '### The Path to Choice'.
+    * **Start with Reflection:** Begin by asking the user to reflect: "Now that you see your pattern, is this current situation *working* for you?" Emphasize that there is no one 'correct' balance for everyone forever.
+    * **If the overall alignment is high (3 or 4 H's):**
+        * **Conscious Acceptance:** State that it is great they can consciously choose this path.
+        * **Warning Signs:** Give them 1-2 specific warning signs related to their **lowest scoring low area** (L) to look out for, suggesting when they may need to re-assess whether their current situation is still their intentional choice (e.g., if Well-being is Low, the warning sign might be chronic fatigue or relationship strain).
+    * **If the misalignment is clear (2 or more L's):**
+        * **Hope and Vision:** If they can't get themselves to "choose the bad" (the friction is too much), describe how things might be significantly better for them if their **lowest scoring area(s) were to improve**. Focus on the *feeling* of improvement (e.g., if Joy is low, describe feeling energized and excited again).
+        * **Invitation to Act:** Invite them to make one small, immediate choice for a step they can take in a different direction.
+    
+Present the output using Markdown in a professional format.
+"""
+                
+                # 2. Call Gemini
+                model = genai.GenerativeModel('gemini-2.5-flash')
+                response = model.generate_content(prompt)
+                
+                # 3. Display Results
+                st.markdown("---")
+                # START: CUSTOM INTRODUCTORY SECTION (H2 is gold)
+                st.markdown("## What is Your Compass Telling You?")
+                st.markdown("""
+                Your thoughtful responses have provided a snapshot of how you are currently experiencing your life. The following insights are designed to help you make conscious choices about the future you are designing.
+
+                While there is no perfect, permanent “balance” of alignment between one’s values, interests, strengths, or needs (life’s just too messy for that), significant benefit can be gained from:
+                
+                1.  **Better understanding/appreciating** “where you are” (i.e., your current experience),
+                2.  **Reflecting** on how the current experience is working for you,
+                3.  **Choosing** whether to accept the current experience as it is (not just the good, but the bad and ugly that go along with it) or to use the compass to inform some choices for taking steps in a different direction that may create a different experience that works better for you.
+                """)
+                # END: CUSTOM INTRODUCTORY SECTION
+                
+                # The AI output below contains the H3 headers for Narrative Profile and The Path to Choice.
+                st.write(response.text)
+                
+                # Add the structured call to action (H3 is gold)
+                st.markdown(
                     """
-                    response = model.generate_content(prompt)
-                    st.markdown("---")
-                    st.markdown("## What is Your Compass Telling You?")
-                    st.markdown(response.text)
-                except Exception as e:
-                    st.error(f"Analysis Error: {e}")
+                    ### Ready to Choose Your Next Step?
+                    
+                    The power lies in awareness and choice. Whether you decide to maintain your current path or explore a new Archetype, here are some resources designed to equip you with the **V.I.S.N.** framework to support your intentional life design.
+                    
+                    * **For Comprehensive Learning:** [Join an upcoming offering of our Course on the Leader's Compass!](https://plei.thinkific.com/courses/compass-coming-soon)
+                    * **For Personalized Guidance:** [Explore 1-on-1 Coaching to accelerate your transformation.](https://www.ChangeYourFuture.net)
+                    """
+                )
+                # Display a button to clear the assessment (or refresh the page)
+                if st.button("Retake the Assessment"):
+                    st.experimental_rerun()
+                
+            except Exception as e:
+                st.error(f"An error occurred during AI generation: {e}")
+else:
+    # This warning is shown if the API key is not found
+    st.warning("⚠️ Please ensure your API Key is set as a **Secret** in Streamlit Cloud (named `GEMINI_API_KEY`) or entered in the sidebar to run the assessment.")

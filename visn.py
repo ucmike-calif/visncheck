@@ -31,10 +31,10 @@ ARCHETYPES = """
 }
 """
 
-# --- CSS INJECTION ---
+# --- CSS INJECTION (The "Nuclear Option" for white bars) ---
 st.markdown(f"""
 <style>
-/* 1. Background and Header */
+/* 1. Transparent Header & Maroon Background */
 header[data-testid="stHeader"] {{
     background-color: transparent !important;
 }}
@@ -42,12 +42,14 @@ header[data-testid="stHeader"] {{
     background-color: {DARK_MAROON} !important;
 }}
 
-/* 2. FORCED TRANSPARENCY (Removes the white bars from your screenshot) */
+/* 2. COMPLETELY REMOVE WHITE BARS */
+/* This targets every possible container level to force transparency */
 div[data-testid="stVerticalBlock"],
 div[data-testid="stMarkdownContainer"],
 div[data-testid="stRadio"],
-label[data-testid="stWidgetLabel"],
-div[role="radiogroup"] {{
+div[data-testid="stWidgetLabel"],
+div[role="radiogroup"],
+div[data-testid="stForm"] {{
     background-color: transparent !important;
     background: transparent !important;
     border: none !important;
@@ -55,9 +57,9 @@ div[role="radiogroup"] {{
 }}
 
 /* 3. Global Text (White) */
-body, .stApp, p, li, label, span {{
+body, .stApp, p, li, label, span, div {{
     color: #FFFFFF !important;
-    font-size: 18px !important; 
+    font-size: 18px !important;
 }}
 
 /* 4. Headers (Gold) */
@@ -80,11 +82,6 @@ div[role="radiogroup"] label[aria-checked="true"] > div:first-child > div {{
 }}
 
 /* 6. Form/UI Cleanup */
-div[data-testid="stForm"] {{
-    border: none !important;
-    padding: 0 !important;
-    background-color: transparent !important;
-}}
 hr {{ border: 0; height: 1px; background: #555; margin: 25px 0; }}
 
 /* Style Submit Button */
@@ -169,8 +166,8 @@ if api_key:
         else:
             with st.spinner("Analyzing your results..."):
                 try:
-                    # UPDATED MODEL STRING TO FIX 404 ERROR
-                    model = genai.GenerativeModel('gemini-pro') 
+                    # UPDATED TO THE MOST CURRENT MODEL NAME
+                    model = genai.GenerativeModel('gemini-1.5-flash-latest') 
                     
                     prompt = f"""
                     Analyze these results based on the Leader's Compass.
@@ -186,4 +183,4 @@ if api_key:
                     st.markdown("## What is Your Compass Telling You?")
                     st.markdown(response.text)
                 except Exception as e:
-                    st.error(f"Analysis Error: {e}. Please ensure your API key is correct.")
+                    st.error(f"Analysis Error: {e}. If this persists, please double-check your API key permissions.")

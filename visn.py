@@ -2,12 +2,12 @@ import streamlit as st
 import google.generativeai as genai
 import os 
 
-# --- CONFIGURATION (Must be the first Streamlit command) ---
+# --- CONFIGURATION ---
 st.set_page_config(page_title="The Leader's Compass", page_icon="🧭")
 
 # --- CONSTANTS ---
 GOLD_COLOR = "#CC9900" 
-DARK_MAROON = "#3B0909"  # A deep, rich maroon
+DARK_MAROON = "#3B0909" 
 
 # --- ARCHETYPE DEFINITIONS ---
 ARCHETYPES = """
@@ -34,71 +34,66 @@ ARCHETYPES = """
 # --- CSS INJECTION ---
 st.markdown(f"""
 <style>
-/* 1. Make the Top Header Bar Transparent */
+/* 1. Transparent Header */
 header[data-testid="stHeader"] {{
     background-color: rgba(0,0,0,0) !important;
     background: transparent !important;
 }}
 
-/* 2. Set the Dark Maroon Background */
+/* 2. Dark Maroon Background */
 .stApp {{
     background-color: {DARK_MAROON} !important;
 }}
 
-/* 3. Remove Form Boxes and Containers */
+/* 3. Global Text (White) - Fixes Question Readability */
+body, .stApp, .stText, .stMarkdown, p, li, label, div[data-testid="stMarkdownContainer"] p {{
+    color: #FFFFFF !important;
+    font-size: 18px !important; 
+    line-height: 1.5;
+    background-color: transparent !important;
+}}
+
+/* 4. Headers (Gold) */
+h1 {{ text-align: center; color: {GOLD_COLOR} !important; font-size: 60px !important; font-weight: bold; }}
+h2 {{ color: {GOLD_COLOR} !important; font-size: 32px !important; margin-top: 40px !important; }}
+h3 {{ color: {GOLD_COLOR} !important; font-size: 24px !important; }}
+
+/* 5. Clean Radio Buttons (Fixes White Boxes) */
+/* This targets ONLY the radio circle container */
+div[data-testid="stRadio"] div[role="radiogroup"] label > div:first-child {{
+    border: 2px solid #FFFFFF !important;
+    background-color: transparent !important; /* Removes the red/white fill */
+}}
+
+/* When Selected: Turn the ring and dot Gold */
+div[data-testid="stRadio"] label[aria-checked="true"] > div:first-child {{
+    border-color: {GOLD_COLOR} !important;
+}}
+
+div[data-testid="stRadio"] label[aria-checked="true"] > div:first-child > div {{
+    background-color: {GOLD_COLOR} !important;
+}}
+
+/* Ensure radio option text (1, 2, 3...) is white */
+div[data-testid="stRadio"] label div[data-testid="stMarkdownContainer"] p {{
+    color: #FFFFFF !important;
+}}
+
+/* 6. Remove Form Boxes */
 div[data-testid="stForm"] {{
     border: none !important;
     padding: 0 !important;
     background-color: transparent !important;
 }}
 
-/* 4. Global Text Styling (White) */
-body, .stApp, .stText, .stMarkdown, p, li, label, div[data-testid="stMarkdownContainer"] p {{
-    color: #FFFFFF !important;
-    font-size: 18px !important; 
-    line-height: 1.5;
-}}
-
-/* 5. Headers Styling (Gold) */
-h1 {{ text-align: center; color: {GOLD_COLOR} !important; font-size: 60px !important; font-weight: bold; }}
-h2 {{ color: {GOLD_COLOR} !important; font-size: 32px !important; }}
-h3 {{ color: {GOLD_COLOR} !important; font-size: 24px !important; }}
-
-/* 6. RADIO BUTTON STYLING */
-/* Unselected: White circle */
-div[data-testid="stRadio"] label > div:first-child {{
-    border: 2px solid #FFFFFF !important;
-    background-color: #FFFFFF !important;
-}}
-
-/* Selected: Gold Dot/Ring */
-div[data-testid="stRadio"] label[data-checked="true"] > div:first-child {{
-    border: 2px solid {GOLD_COLOR} !important;
-    background-color: #FFFFFF !important;
-}}
-
-div[data-testid="stRadio"] label[data-checked="true"] > div:first-child > div {{
-    background-color: {GOLD_COLOR} !important;
-}}
-
-/* Ensure the text labels remain white */
-div.stRadio > label > div > div {{
-    color: #FFFFFF !important; 
-    font-size: 18px; 
-}}
-
-/* 7. UI Polish */
+/* 7. UI Cleanup */
 .stApp a.anchor-link {{ display: none !important; }}
-hr {{ border: 0; height: 1px; background: #555; margin: 25px 0; }}
-
-/* Remove default Streamlit padding at the top */
-.block-container {{
-    padding-top: 2rem !important;
-}}
+hr {{ border: 0; height: 1px; background: #666; margin: 25px 0; }}
+.block-container {{ padding-top: 2rem !important; }}
 </style>
 """, unsafe_allow_html=True)
 
-# --- APP INTRO ---
+# --- INTRO ---
 st.markdown(f"<h1>Free VISN Check!</h1>", unsafe_allow_html=True)
 st.markdown("## Are You **Intentionally Leading** Yourself to a life of Purpose, Joy, Impact and Well-being?")
 
@@ -111,7 +106,7 @@ api_key = os.getenv("GEMINI_API_KEY")
 if not api_key:
     api_key = st.sidebar.text_input("Enter Google Gemini API Key", type="password")
 
-# --- QUESTIONS SETUP ---
+# --- QUESTIONS ---
 RATING_OPTIONS = ["1", "2", "3", "4", "5"]
 questions = [
     {"dimension": "Purpose", "text": "I spend my time contributing to something which gives me a sense of meaning and purpose."},
@@ -150,7 +145,7 @@ if api_key:
             
             st_key = f"radio_{q_counter}"
             answer = st.radio(
-                label=f"**{q_counter}.** {q['text']}",
+                label=f"{q_counter}. {q['text']}",
                 options=RATING_OPTIONS,
                 key=st_key,
                 index=None, 
@@ -166,26 +161,15 @@ if api_key:
         if any(answer is None for answer in user_answers.values()):
             st.error("🚨 Please answer all 16 questions.")
         else:
-            with st.spinner("Analyzing your results..."):
+            with st.spinner("Analyzing..."):
                 try:
-                    prompt = f"""
-                    Analyze these results based on the Leader's Compass framework.
-                    Answers: {user_answers}
-                    Archetypes: {ARCHETYPES}
-                    Output: 
-                    1. '### Narrative Profile' (Max 75 words, include Archetype name in 1st sentence).
-                    2. '### The Path to Choice' (Reflective guidance).
-                    """
+                    prompt = f"Analyze results: {user_answers}\nArchetypes: {ARCHETYPES}\nOutput: Narrative Profile and Path to Choice."
                     model = genai.GenerativeModel('gemini-1.5-flash')
                     response = model.generate_content(prompt)
-                    
                     st.markdown("---")
                     st.markdown("## What is Your Compass Telling You?")
                     st.write(response.text)
                     st.markdown("### Ready to Choose Your Next Step?")
-                    st.markdown("* **For Guidance:** [Explore 1-on-1 Coaching](https://www.ChangeYourFuture.net)")
-                    
-                    if st.button("Retake the Assessment"):
-                        st.rerun()
+                    st.markdown("* **For Guidance:** [1-on-1 Coaching](https://www.ChangeYourFuture.net)")
                 except Exception as e:
-                    st.error(f"Something went wrong: {e}")
+                    st.error(f"Error: {e}")

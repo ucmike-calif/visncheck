@@ -34,7 +34,7 @@ ARCHETYPES = """
 # --- CSS INJECTION ---
 st.markdown(f"""
 <style>
-/* 1. Transparent Header & Dark Maroon Background */
+/* 1. Background and Header */
 header[data-testid="stHeader"] {{
     background-color: transparent !important;
 }}
@@ -42,22 +42,22 @@ header[data-testid="stHeader"] {{
     background-color: {DARK_MAROON} !important;
 }}
 
-/* 2. FIX: Remove White Boxes/Bars around questions */
-/* Targets the container of the entire radio group and its labels */
-div[data-testid="stRadio"], 
-div[data-testid="stWidgetLabel"], 
+/* 2. FORCED TRANSPARENCY (Removes the white bars from your screenshot) */
+div[data-testid="stVerticalBlock"],
 div[data-testid="stMarkdownContainer"],
-div[data-testid="stForm"] {{
+div[data-testid="stRadio"],
+label[data-testid="stWidgetLabel"],
+div[role="radiogroup"] {{
     background-color: transparent !important;
+    background: transparent !important;
     border: none !important;
     box-shadow: none !important;
 }}
 
-/* 3. Global Text Styling (White) */
-body, .stApp, p, li, label {{
+/* 3. Global Text (White) */
+body, .stApp, p, li, label, span {{
     color: #FFFFFF !important;
     font-size: 18px !important; 
-    line-height: 1.5;
 }}
 
 /* 4. Headers (Gold) */
@@ -65,39 +65,35 @@ h1 {{ text-align: center; color: {GOLD_COLOR} !important; font-size: 50px !impor
 h2 {{ color: {GOLD_COLOR} !important; font-size: 28px !important; margin-top: 30px !important; }}
 h3 {{ color: {GOLD_COLOR} !important; font-size: 22px !important; }}
 
-/* 5. RADIO BUTTONS: Hollow White -> Solid Gold */
-/* The outer ring */
-div[data-testid="stRadio"] div[role="radiogroup"] label > div:first-child {{
+/* 5. RADIO BUTTONS: Hollow White Rings */
+div[role="radiogroup"] label > div:first-child {{
     border: 2px solid #FFFFFF !important;
-    background-color: transparent !important; /* No red/white middle when unclicked */
-}}
-
-/* The selected state */
-div[data-testid="stRadio"] label[aria-checked="true"] > div:first-child {{
-    border-color: {GOLD_COLOR} !important;
-}}
-
-/* The inner dot when clicked */
-div[data-testid="stRadio"] label[aria-checked="true"] > div:first-child > div {{
-    background-color: {GOLD_COLOR} !important;
-}}
-
-/* Radio numbers (1, 2, 3...) */
-div[data-testid="stRadio"] label div[data-testid="stMarkdownContainer"] p {{
-    color: #FFFFFF !important;
     background-color: transparent !important;
 }}
 
-/* 6. UI Cleanup */
-.stApp a.anchor-link {{ display: none !important; }}
-hr {{ border: 0; height: 1px; background: #666; margin: 20px 0; }}
-.block-container {{ padding-top: 1rem !important; }}
+/* Radio Selected State (Gold) */
+div[role="radiogroup"] label[aria-checked="true"] > div:first-child {{
+    border-color: {GOLD_COLOR} !important;
+}}
+div[role="radiogroup"] label[aria-checked="true"] > div:first-child > div {{
+    background-color: {GOLD_COLOR} !important;
+}}
 
-/* Style the Submit Button */
+/* 6. Form/UI Cleanup */
+div[data-testid="stForm"] {{
+    border: none !important;
+    padding: 0 !important;
+    background-color: transparent !important;
+}}
+hr {{ border: 0; height: 1px; background: #555; margin: 25px 0; }}
+
+/* Style Submit Button */
 button[kind="primaryFormSubmit"] {{
     background-color: {GOLD_COLOR} !important;
     color: #FFFFFF !important;
+    font-weight: bold !important;
     border: none !important;
+    width: 100%;
 }}
 </style>
 """, unsafe_allow_html=True)
@@ -105,10 +101,6 @@ button[kind="primaryFormSubmit"] {{
 # --- APP CONTENT ---
 st.markdown("<h1>Free VISN Check!</h1>", unsafe_allow_html=True)
 st.markdown("### Are You **Intentionally Leading** Yourself to a life of Purpose, Joy, Impact and Well-being?")
-
-st.markdown(f"""
-This FREE 16-question survey uses the four points of The Leader's Compass—<span style='color: {GOLD_COLOR};'>**V**alues</span>, <span style='color: {GOLD_COLOR};'>**I**nterests</span>, <span style='color: {GOLD_COLOR};'>**S**trengths</span> and <span style='color: {GOLD_COLOR};'>**N**eeds</span>.
-""", unsafe_allow_html=True)
 
 # --- API KEY ---
 api_key = os.getenv("GEMINI_API_KEY")
@@ -177,11 +169,21 @@ if api_key:
         else:
             with st.spinner("Analyzing your results..."):
                 try:
-                    prompt = f"Analyze results: {user_answers}\nArchetypes: {ARCHETYPES}\nProvide: Narrative Profile and Path to Choice."
-                    model = genai.GenerativeModel('gemini-1.5-flash')
+                    # UPDATED MODEL STRING TO FIX 404 ERROR
+                    model = genai.GenerativeModel('gemini-pro') 
+                    
+                    prompt = f"""
+                    Analyze these results based on the Leader's Compass.
+                    Scores: {user_answers}
+                    Archetypes: {ARCHETYPES}
+                    
+                    Return two sections:
+                    1. ### Narrative Profile (confirm the Archetype name).
+                    2. ### The Path to Choice (reflective advice).
+                    """
                     response = model.generate_content(prompt)
                     st.markdown("---")
                     st.markdown("## What is Your Compass Telling You?")
-                    st.write(response.text)
+                    st.markdown(response.text)
                 except Exception as e:
-                    st.error(f"Error: {e}")
+                    st.error(f"Analysis Error: {e}. Please ensure your API key is correct.")
